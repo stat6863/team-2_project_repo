@@ -50,11 +50,11 @@ and saved in an xlsx format to produce file Calls_for_Serivce_2016.xlsx
 
 [Unique ID Schema] The column NOPD_Item is the primary key
 ;
-%let inputDataset1DSN = Calls_for_Serivce_2016_raw;
-%let inputDataset1URL =
+%let inputDataset2DSN = Calls_for_Serivce_2016_raw;
+%let inputDataset2URL =
 https://github.com/stat6863/team-2_project_repo/blob/master/data/Calls_for_Service_2016.xlsx
 ;
-%let inputDataset1Type = XLSX;
+%let inputDataset2Type = XLSX;
 
 
 *
@@ -78,11 +78,11 @@ and saved in an xlsx format to produce file Electronic_Police_Report_2017.xlsx
 [Unique ID Schema] The column Item_Number is the primary key, it’s the same as 
 the NOPD_Item column in Dataset 1 and Dataset 2. 
 ;
-%let inputDataset1DSN = Electronic_Police_Report_2017_raw;
-%let inputDataset1URL =
+%let inputDataset3DSN = Electronic_Police_Report_2017_raw;
+%let inputDataset3URL =
 https://github.com/stat6863/team-2_project_repo/blob/master/data/Electronic_Police_Report_2017.xlsx
 ;
-%let inputDataset1Type = XLSX;
+%let inputDataset3Type = XLSX;
 
 
 *
@@ -106,11 +106,11 @@ and saved in an xlsx format to produce file Electronic_Police_Report_2016.xlsx
 [Unique ID Schema] The column Item_Number is the primary key, it’s the same as 
 the NOPD_Item column in Dataset 1 and Dataset 2. 
 ;
-%let inputDataset1DSN = Electronic_Police_Report_2016_raw;
-%let inputDataset1URL =
+%let inputDataset4DSN = Electronic_Police_Report_2016_raw;
+%let inputDataset4URL =
 https://github.com/stat6863/team-2_project_repo/blob/master/data/Electronic_Police_Report_2016.xlsx
 ;
-%let inputDataset1Type = XLSX;
+%let inputDataset4Type = XLSX;
 
 
 * load raw datasets over the wire, if they doesn't already exist;
