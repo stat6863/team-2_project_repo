@@ -39,8 +39,8 @@ Rationale: This should help determine what age that most offenders are
 committing crime and whether there is a way to decrease crime at that age.
 
 Note: This compares the column "Item_Number" from Electronic_Police_Report_2016
-to the column of the same name from Electronic_Police_Report_2017 to combine the column
-"Offender_Age" from each year that has a unique Item Number.
+to the column of the same name from Electronic_Police_Report_2017 to combine 
+the column "Offender_Age" from each year that has a unique Item Number.
 ;
 
 
@@ -48,14 +48,13 @@ to the column of the same name from Electronic_Police_Report_2017 to combine the
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Which zip code has the most discharge of guns? 
+Question: What is the top district where murders happen?
 
-Rationale: This could help identify which zip codes may be the most prone to
-gun violence and help community leaders target them for crime control.
+Rationale: This could help identify which districts are more prone to murders
+and could help community advocates target those for crime prevention.
 
-Note: This compares the column "TypeText" from Calls_for_Service_2016
-to the column of the same name from Calls_for_Service_2017 where the column is 
-equal to "DISCHARGING FIREARM" to combine to the column "Zip" from each year 
-that which has a unique NOPD Item Number.
+Note: This compares the column "District" from Electronic_Police_Report_2016 
+where the column "Signal_Description" includes "Homicide" and that which has a 
+unique Item_Number.
 ;
 
