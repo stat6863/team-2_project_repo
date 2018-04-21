@@ -25,6 +25,9 @@ preventative measures they should take to prevent these crimes.
 Note: This compares the column "NOPD_Item" from Calls_for_Service_2016
 to the column of the same name from Calls_for_Service_2017 to combine the 
 column "InitialTypeText" from each year that has a unique NOPD Item Number.
+
+Limitations: Values of InitialTypeText that are blank should be 
+excluded from this analysis, since they are potentially missing data values.
 ;
 
 
@@ -40,6 +43,9 @@ committing crime and whether there is a way to decrease crime at that age.
 Note: This compares the column "Item_Number" from Electronic_Police_Report_2016
 to the column of the same name from Electronic_Police_Report_2017 to combine the column
 "Offender_Age" from each year that has a unique Item Number.
+
+Limitations: Values of Offender_Age equal to zero or blank should be excluded
+from this analysis, since they are potentially missing data values.
 ;
 
 
@@ -57,5 +63,8 @@ zip codes.
 Note: This compares the column "NOPD_Item" from Calls_for_Service_2016
 to the column of the same name from Calls_for_Service_2017 to combine the 
 column "Zip" from each year that has a unique NOPD Item Number.
+
+Limitations: Values of Zip that are blank should be excluded
+from this analysis, since they are potentially missing data values.
 ;
 
