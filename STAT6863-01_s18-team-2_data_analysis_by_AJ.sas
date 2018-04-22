@@ -17,9 +17,11 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *
 Question: Does the season of the year influence the types of crimes that are 
 committed?
+
 Rationale: This should help police officers and the public to prepare for 
 certain crimes being committed because of possible weather influences (i.e., 
 the season).
+
 Note: This compares the column "Charge_Description" and 
 "Occured_Date Time" from 2016 and 2017 data sets.
 ;
@@ -31,8 +33,10 @@ Note: This compares the column "Charge_Description" and
 *
 Question: Can we predict how quickly an officer arrives to a scene after he has 
 been dispatched?
+
 Rationale: This would help the public become better educated on how long they can 
 expect to wait for an officer to arrive to a current/potential crime scene.
+
 Note: This compares the columns "TimeDispatch" and "TimeArrive" from 
 Calls_for_Service_2016 and Calls_for_Service_2017 with any other column that is 
 an explanatory variable from all datasets. They can be combined since the variable 
@@ -47,8 +51,10 @@ from Electronic_Police_Report_2016/7.
 *
 Question: Is there a correlation between a victim's/offender's race/gender with 
 the type of priority for the call?
+
 Rationale: This would help the police to become better aware of who they are 
 dealing with when they get a priority call based on a certain level
+
 Note: This compares the column "Priority" from Calls_for_Service with the 
 columns "Offender Race," "Offender Gender," "Victim Race," and "Victim Gender" 
 from Electronic_Police_Report.
