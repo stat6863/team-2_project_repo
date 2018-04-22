@@ -74,7 +74,7 @@ and saved in an xlsx format to produce file Electronic_Police_Report_2017.xlsx
  
 [Data Dictionary] https://data.nola.gov/Public-Safety-and-Preparedness/Electronic-Police-Report-2017/qtcu-97s9
 
-[Unique ID Schema] The column Item_Number is the primary key, itâ€™s the same as 
+[Unique ID Schema] The column Item_Number is the primary key, it’s the same as 
 the NOPD_Item column in Dataset 1 and Dataset 2. 
 ;
 %let inputDataset3DSN = Police_Reports_2017_raw;
@@ -101,7 +101,7 @@ and saved in an xlsx format to produce file Electronic_Police_Report_2016.xlsx
  
 [Data Dictionary] https://data.nola.gov/Public-Safety-and-Preparedness/Electronic-Police-Report-2016/4gc2-25he
 
-[Unique ID Schema] The column Item_Number is the primary key, itâ€™s the same as 
+[Unique ID Schema] The column Item_Number is the primary key, it’s the same as 
 the NOPD_Item column in Dataset 1 and Dataset 2. 
 ;
 %let inputDataset4DSN = Police_Reports_2016_raw;
@@ -153,4 +153,115 @@ the NOPD_Item column in Dataset 1 and Dataset 2.
     %end;
 %mend;
 %loadDatasets
+
+/* combines Calls_for_Serivce_2016_raw with 
+	Calls_for_Serivce_2017_raw
+	into one table CallsForService1617
+*/
+
+proc sql;
+	create table CallsForService1617 as
+	SELECT 
+		Calls_for_Serivce_2016_raw.NOPD_Item,
+		Calls_for_Serivce_2016_raw.TimeCreate,
+		Calls_for_Serivce_2016_raw.TimeDispatch,
+		Calls_for_Serivce_2016_raw.InitialTypeText,
+		Calls_for_Serivce_2016_raw.Zip,
+		Calls_for_Serivce_2016_raw.Type_
+	FROM Calls_for_Serivce_2016_raw
+	UNION
+	SELECT
+		Calls_for_Serivce_2017_raw.NOPD_Item,
+		Calls_for_Serivce_2017_raw.TimeCreate,
+		Calls_for_Serivce_2017_raw.TimeDispatch,
+		Calls_for_Serivce_2017_raw.InitialTypeText,
+		Calls_for_Serivce_2017_raw.Zip,
+		Calls_for_Serivce_2017_raw.Type_
+	FROM Calls_for_Serivce_2017_raw
+	;
+quit;
+/* combines Police_reports_2016_raw with 
+	Police_Reports_2017_raw
+	into one table Police_Reports1617
+*/
+
+proc sql;
+	create table Police_Reports1617 as
+	SELECT 
+		Police_reports_2016_raw.Item_Number,
+		Police_reports_2016_raw.District,
+		Police_reports_2016_raw.Offender_Age
+	FROM Police_reports_2016_raw
+	UNION
+	SELECT
+		Police_reports_2017_raw.Item_Number,
+		Police_reports_2017_raw.District,
+		Police_reports_2017_raw.Offender_Age
+	FROM Police_reports_2017_raw
+	;
+quit;
+
+/* Removes and sorts duplicates by primary ID 
+	and type*/
+
+proc sort
+        nodupkey
+        data=CallsForService1617
+        dupout=CallsForService1617_raw_dups
+        out=CallsForService1617_raw_sorted
+    ;
+    by
+        NOPD_Item
+        Type_
+    ;
+run;
+
+/* Removes and sorts duplicates by primary ID*/
+
+proc sort
+        nodupkey
+        data=Police_Reports1617
+        dupout=Police_Reports1617_raw_dups
+        out=Police_Reports1617_raw_sorted
+    ;
+    by
+	Item_Number
+    ;
+run;
+
+
+
+/* Removes rows with missing primary
+ID: NOPD_Item for table CallsForService1617 */
+
+proc sql;
+	create table CallsForService1617 as
+	SELECT * FROM CallsForService1617_raw_sorted
+	WHERE
+	not(missing(NOPD_Item))
+	;
+quit;
+/* Removes rows with missing primary
+ID: Item_Number for table Police_Reports1617*/
+proc sql;
+	create table Police_Reports1617 as
+	SELECT * FROM Police_Reports1617_raw_sorted
+	WHERE
+	not(missing(Item_Number))
+	;
+quit;
+
+/* Dataset weekday to be used for Q1 by LC. 
+Changes datetime value to weekday name.
+*/
+proc sql;
+	create table CallsForService1617Day as
+	SELECT TimeCreate FROM CallsForService1617
+	;
+quit;
+DATA weekday;
+  SET CallsForService1617Day;
+  Weekday=datepart(TimeCreate);
+  format Weekday weekdate3.;
+RUN;
 
