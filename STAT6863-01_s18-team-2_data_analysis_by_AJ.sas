@@ -23,9 +23,12 @@ certain crimes being committed because of possible weather influences (i.e.,
 the season).
 
 Note: This compares the column "Charge_Description" and 
-"Occured_Date Time" from 2016 and 2017 data sets.
-;
+"Occured_Date Time" from 2016 and 2017 data sets of Electronic Police Report.
 
+Limitations: Values of Charge Description and Occurred Date Time that are 
+blank should be excluded from this analysis, since they are potentially 
+missing data values.
+;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -42,6 +45,10 @@ Calls_for_Service_2016 and Calls_for_Service_2017 with any other column that is
 an explanatory variable from all datasets. They can be combined since the variable 
 "NOPD Item" from Calls_for_Service2016/7 matches with the "Item Number" 
 from Electronic_Police_Report_2016/7.
+
+Limitations: Values of Time Dispatch and Time Arrive, along with any other 
+appropriate column, that are blank should be excluded from this analysis, 
+since they are potentially missing data values.
 ;
 
 
@@ -59,4 +66,7 @@ Note: This compares the column "Priority" from Calls_for_Service with the
 columns "Offender Race," "Offender Gender," "Victim Race," and "Victim Gender" 
 from Electronic_Police_Report.
 
-
+Limitations: Values of Priority and Offender Race, Offender Gender, Victim Race, 
+and Victim Gender that are blank should be excluded from this analysis, 
+since they are potentially missing data values.
+;
