@@ -26,8 +26,10 @@ from Calls_for_Service_2016 to the column of the same name from
 Calls_for_Service_2017 to combine the column and groups by day of the week to
 "Weekday" from each year that has a unique NOPD Item Number. 
 
+Limitations: The weekday format converts the datetime value into a weekday 
+number making it difficult to read the data. Should use a format proc to 
+convert the numbers into names
 ;
-
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -41,6 +43,11 @@ committing crime and whether there is a way to decrease crime at that age.
 Note: This compares the column "Item_Number" from Electronic_Police_Report_2016
 to the column of the same name from Electronic_Police_Report_2017 to combine 
 the column "Offender_Age" from each year that has a unique Item Number.
+
+Limitations: Values of Item_Number from the datasets 
+Electronic_Police_Report_2016 and Electronic_Police_Report_2017 that are blank
+should be excluded. 
+
 ;
 
 
@@ -56,5 +63,9 @@ and could help community advocates target those for crime prevention.
 Note: This compares the column "District" from Electronic_Police_Report_2016 
 where the column "Signal_Description" includes "Homicide" and that which has a 
 unique Item_Number.
+
+Limitations: Rows with missing District data should be excluded since they are
+missing data. Rows with missing Signal Description values should be excluded 
+because they are missing data. 
 ;
 
