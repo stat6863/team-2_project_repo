@@ -29,7 +29,26 @@ column "InitialTypeText" from each year that has a unique NOPD Item Number.
 Limitations: Values of InitialTypeText that are blank should be 
 excluded from this analysis, since they are potentially missing data values.
 ;
+proc freq
+        data = Calls_for_Service_1617_v2 noprint
+    ;
+    table
+         InitialTypeText / out = Count_InitialTypeText list
+    ;
+        where
+            not(missing(InitialTypeText));
+    ;
+run
 
+proc sort 
+        data = Count_InitialTypeText
+        out = Count_InitialTypeText_Desc
+    ;
+    by
+        descending count
+    ;
+ run;
+    
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -48,6 +67,8 @@ Limitations: Values of Offender_Age equal to zero or blank should be excluded
 from this analysis, since they are potentially missing data values.
 ;
 
+proc means data = Police_Reports_1617_v2;
+run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -68,3 +89,22 @@ Limitations: Values of Zip that are blank should be excluded
 from this analysis, since they are potentially missing data values.
 ;
 
+proc freq
+        data = Calls_for_Service_1617_v2 noprint
+    ;
+    table
+        Zip / out = Count_Zip list
+    ;
+        where
+            not(missing(Zip));
+    ;
+run
+
+proc sort 
+        data = Count_Zip
+        out = Count_Zip_Desc
+    ;
+    by
+        descending count
+    ;
+ run;
