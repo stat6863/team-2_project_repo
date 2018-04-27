@@ -110,11 +110,11 @@ the NOPD_Item column in Dataset 1 and Dataset 2.
 %let inputDataset4Type = XLSX;
 
 
-* set global system options;
+*set global system options;
 options fullstimer;
 
 
-* load raw datasets over the wire, if they doesn't already exist;
+*load raw datasets over the wire, if they doesn't already exist;
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
     %put &=dsn;
     %put &=url;
@@ -159,7 +159,7 @@ options fullstimer;
 
 
 *check Calls_for_Service_2017_raw for bad unique id values, where the column
-NOPD_Item is the primary key;
+ NOPD_Item is the primary key;
 proc sql;
     /* check for duplicate unique id values; after executing this query, we 
        see that Calls_for_Service_2017 contains no rows, so no mitigation is
@@ -175,73 +175,63 @@ proc sql;
 	having
             row_count_for_unique_id_values > 1
 	;
-    /*remove rows with missing unique id components; after executing this
-      query, the new dataset Calls_for_Service_2017 will have no duplicate/
-      repeated unique id values, and all unique id values will correspond to
-      our experimental units of interest, which are calls made to the New 
-      Orleans Police Department*/
-    create table Calls_for_Service_2017 as
-	select
-            *
-	from
-	    Calls_for_Service_2017_raw
-	where
-	    /* remove rows with missing unique id value components */
-	    not(missing(NOPD_Item))
-    ;
 quit;
+
+*removes rows with missing and duplicate unique id components, after 
+ executing this query, the new dataset Calls_for_Service_2017 will have no 
+ duplicate/repeated unique id values, and all unique id values will correspond
+ to our experimental units of interest, which are calls made to the New 
+ Orleans Police Department;
+proc sort
+    nodupkey
+    data = Calls_for_Service_2017_raw(where=(not(missing(NOPD_Item))))
+    dupout = Calls_for_Service_2017_raw_dups
+    out = Calls_for_Service_2017
+    ;
+    by 
+        NOPD_Item
+    ;
+run;
+
 
 
 *check Calls_for_Service_2016_raw for bad unique id values, where the column
-NOPD_Item is the primary key;
+ NOPD_Item is the primary key;
 proc sql;
     /* check for duplicate unique id values; after executing this query, we 
        see that Calls_for_Service_2016 contains rows which are duplicates,
        which we can mitigate as part of eliminating rows having duplicate unique 
        id component*/
     create table Calls_for_Service_2016_dups as
-	    select
-		    NOPD_Item
-			,count(*) as row_count_for_unique_id_values
+	select
+            NOPD_Item
+	    ,count(*) as row_count_for_unique_id_values
         from 
-		    Calls_for_Service_2016_raw
-		group by
-			NOPD_Item
-		having
-		    row_count_for_unique_id_values > 1
+	    Calls_for_Service_2016_raw
+	group by
+	    NOPD_Item
+	having
+	    row_count_for_unique_id_values > 1
 	;
 quit;
-* removes duplicate unique id values from Calls_for_Service_2016_raw;
+*removes rows with missing and duplicate unique id components, after 
+ executing this query, the new dataset Calls_for_Service_2016 will have no 
+ duplicate/repeated unique id values, and all unique id values will correspond
+ to our experimental units of interest, which are calls made to the New 
+ Orleans Police Department;
 proc sort
     nodupkey
-    data = Calls_for_Service_2016_raw 
+    data = Calls_for_Service_2016_raw(where=(not(missing(NOPD_Item))))
     dupout = Calls_for_Service_2016_raw_dups
-    out = Calls_for_Service_2016_raw_sort
+    out = Calls_for_Service_2016
     ;
     by 
         NOPD_Item
     ;
 run;
-proc sql;
-    /*remove rows with missing unique id components; after executing this
-    query, the new dataset Calls_for_Service_2016 will have no duplicate/
-    repeated unique id values, and all unique id values will correspond to
-    our experimental units of interest, which are calls made to the New 
-    Orleans Police Department*/
-    create table Calls_for_Service_2016 as
-	select
-	    *
-	from
-	    Calls_for_Service_2016_raw_sort
-	where
-	    /* remove rows with missing unique id value components */
-	    not(missing(NOPD_Item))
-	;
-quit;
-
 
 *check Police_Reports_2017_raw for bad unique id values, where the column
-Item_Number is the primary key;
+ Item_Number is the primary key;
 proc sql;
     /* check for duplicate unique id values; after executing this query, we 
        see that Police_Reports_2017 contains rows which are duplicates,
@@ -259,37 +249,25 @@ proc sql;
         row_count_for_unique_id_values > 1
     ;
 quit;
-* removes duplicate unique id values from Police_Reports_2017;
+*removes rows with missing and duplicate unique id components, after 
+ executing this query, the new dataset Police_Reports_2017 will have no 
+ duplicate/repeated unique id values, and all unique id values will correspond
+ to our experimental units of interest, which are reports filed by the New 
+ Orleans Police Department;
 proc sort
     nodupkey
-    data = Police_Reports_2017_raw 
+    data = Police_Reports_2017_raw(where=(not(missing(Item_Number))))
     dupout = Police_Reports_2017_raw_dups
-    out = Police_Reports_2017_raw_sort
+    out = Police_Reports_2017
     ;
     by 
         Item_Number
     ;
 run;
-proc sql;
-    /*remove rows with missing unique id components; after executing this
-      query, the new dataset Police_Reports_2017 will have no duplicate/
-      repeated unique id values, and all unique id values will correspond to
-      our experimental units of interest, which are reports filed to the New 
-      Orleans Police Department*/
-    create table Police_Reports_2017 as
-        select
-	    *
-	from
-	    Police_Reports_2017_raw_sort
-	where
-	    /* remove rows with missing unique id value components */
-	    not(missing(Item_Number))
-	;
-quit;
 
 
 *check Police_Reports_2016_raw for bad unique id values, where the column
-Item_Number is the primary key;
+ Item_Number is the primary key;
 proc sql;
     /* check for duplicate unique id values; after executing this query, we 
        see that Police_Reports_2016 contains rows which are duplicates,
@@ -307,359 +285,348 @@ proc sql;
 	    row_count_for_unique_id_values > 1
 	;
 quit;
-* removes duplicate unique id values from Police_Reports_2016;
+*removes rows with missing and duplicate unique id components, after 
+ executing this query, the new dataset Police_Reports_2016 will have no 
+ duplicate/repeated unique id values, and all unique id values will correspond
+ to our experimental units of interest, which are reports filed by the New 
+ Orleans Police Department;
 proc sort
     nodupkey
-    data = Police_Reports_2016_raw 
+    data = Police_Reports_2016_raw(where=(not(missing(Item_Number))))
     dupout = Police_Reports_2016_raw_dups
-    out = Police_Reports_2016_raw_sort
+    out = Police_Reports_2016
     ;
     by 
         Item_Number
     ;
 run;
-proc sql;
-    /*remove rows with missing unique id components; after executing this
-      query, the new dataset Police_Reports_2016 will have no duplicate/
-      repeated unique id values, and all unique id values will correspond to
-      our experimental units of interest, which are reports filed to the New 
-      Orleans Police Department*/
-    create table Police_Reports_2016 as
-        select
-	    *
-	from
-	    Police_Reports_2016_raw_sort
-	where
-	    /* remove rows with missing unique id value components */
-            not(missing(Item_Number))
-	;
-quit;
 
 *inspect columns of interest in cleaned version of datasets;
-  
-title "Zip in Calls_for_Service_2017";
-proc sql;
-    select
-	min(Zip) as min
-        ,max(Zip) as max
-        ,mean(Zip) as max
-        ,median(Zip) as max
-        ,nmiss(Zip)as missing
-    from
-	Calls_for_Service_2017
+    /*  
+    title "Zip in Calls_for_Service_2017";
+    proc sql;
+        select
+	    min(Zip) as min
+            ,max(Zip) as max
+            ,mean(Zip) as max
+            ,median(Zip) as max
+            ,nmiss(Zip)as missing
+        from
+	    Calls_for_Service_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Zip in Calls_for_Service_2016";
-proc sql;
-    select
-	min(Zip) as min
-        ,max(Zip) as max
-        ,mean(Zip) as max
-        ,median(Zip) as max
-        ,nmiss(Zip)as missing
-    from
-	Calls_for_Service_2016
+    title "Zip in Calls_for_Service_2016";
+    proc sql;
+        select
+	    min(Zip) as min
+            ,max(Zip) as max
+            ,mean(Zip) as max
+            ,median(Zip) as max
+            ,nmiss(Zip)as missing
+        from
+	    Calls_for_Service_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "InitialTypeText in Calls_for_Service_2017";
-proc sql;
-    select
-        nmiss(InitialTypeText)as missing
-    from
-	Calls_for_Service_2017
+    title "InitialTypeText in Calls_for_Service_2017";
+    proc sql;
+        select
+            nmiss(InitialTypeText)as missing
+        from
+	    Calls_for_Service_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "InitialTypeText in Calls_for_Service_2016";
-proc sql;
-    select
-        nmiss(InitialTypeText)as missing
-    from
-	Calls_for_Service_2016
+    title "InitialTypeText in Calls_for_Service_2016";
+    proc sql;
+        select
+            nmiss(InitialTypeText)as missing
+        from
+	    Calls_for_Service_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Time Dispatch in Calls_for_Service_2017";
-proc sql;
-    select
-        nmiss(TimeDispatch)as missing
-    from
-	Calls_for_Service_2017
+    title "Time Dispatch in Calls_for_Service_2017";
+    proc sql;
+        select
+            nmiss(TimeDispatch)as missing
+        from
+	    Calls_for_Service_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Time Dispatch in Calls_for_Service_2016";
-proc sql;
-    select
-        nmiss(TimeDispatch)as missing
-    from
-	Calls_for_Service_2016
+    title "Time Dispatch in Calls_for_Service_2016";
+    proc sql;
+        select
+            nmiss(TimeDispatch)as missing
+        from
+	    Calls_for_Service_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Time Arrive in Calls_for_Service_2017";
-proc sql;
-    select
-        nmiss(TimeArrive)as missing
-    from
-	Calls_for_Service_2017
+    title "Time Arrive in Calls_for_Service_2017";
+    proc sql;
+        select
+            nmiss(TimeArrive)as missing
+        from
+	    Calls_for_Service_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Time Arrive in Calls_for_Service_2016";
-proc sql;
-    select
-        nmiss(TimeArrive)as missing
-    from
-	Calls_for_Service_2016
+    title "Time Arrive in Calls_for_Service_2016";
+    proc sql;
+        select
+            nmiss(TimeArrive)as missing
+        from
+	    Calls_for_Service_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Priority Arrive in Calls_for_Service_2017";
-proc sql;
-    select
-        nmiss(Priority)as missing
-    from
-	Calls_for_Service_2017
+    title "Priority Arrive in Calls_for_Service_2017";
+    proc sql;
+        select
+            nmiss(Priority)as missing
+        from
+	    Calls_for_Service_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Priority Arrive in Calls_for_Service_2016";
-proc sql;
-    select
-        nmiss(Priority)as missing
-    from
-	Calls_for_Service_2016
+    title "Priority Arrive in Calls_for_Service_2016";
+    proc sql;
+        select
+            nmiss(Priority)as missing
+        from
+	    Calls_for_Service_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Offender Age in Police_Reports_2017";
-proc sql;
-    select
-	min(Offender_Age) as min
-        ,max(Offender_Age) as max
-        ,mean(Offender_Age) as max
-        ,median(Offender_Age) as max
-        ,nmiss(Offender_Age)as missing
-    from
-	Police_Reports_2017
+    title "Offender Age in Police_Reports_2017";
+    proc sql;
+        select
+	    min(Offender_Age) as min
+            ,max(Offender_Age) as max
+            ,mean(Offender_Age) as max
+            ,median(Offender_Age) as max
+            ,nmiss(Offender_Age)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Offender Age in Police_Reports_2016";
-proc sql;
-    select
-	min(Offender_Age) as min
-        ,max(Offender_Age) as max
-        ,mean(Offender_Age) as max
-        ,median(Offender_Age) as max
-        ,nmiss(Offender_Age)as missing
-    from
-	Police_Reports_2016
+    title "Offender Age in Police_Reports_2016";
+    proc sql;
+        select
+	    min(Offender_Age) as min
+            ,max(Offender_Age) as max
+            ,mean(Offender_Age) as max
+            ,median(Offender_Age) as max
+            ,nmiss(Offender_Age)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "District in Police_Reports_2017";
-proc sql;
-    select
-	min(District) as min
-        ,max(District) as max
-        ,mean(District) as max
-        ,median(District) as max
-        ,nmiss(District)as missing
-    from
-	Police_Reports_2017
+    title "District in Police_Reports_2017";
+    proc sql;
+        select
+	    min(District) as min
+            ,max(District) as max
+            ,mean(District) as max
+            ,median(District) as max
+            ,nmiss(District)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "District in Police_Reports_2016";
-proc sql;
-    select
-	min(District) as min
-        ,max(District) as max
-        ,mean(District) as max
-        ,median(District) as max
-        ,nmiss(District)as missing
-    from
-	Police_Reports_2016
+    title "District in Police_Reports_2016";
+    proc sql;
+        select
+	    min(District) as min
+            ,max(District) as max
+            ,mean(District) as max
+            ,median(District) as max
+            ,nmiss(District)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Charge Description in Police_Reports_2017";
-proc sql;
-    select
-        nmiss(Charge_Description)as missing
-    from
-	Police_Reports_2017
+    title "Charge Description in Police_Reports_2017";
+    proc sql;
+        select
+            nmiss(Charge_Description)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Charge Description in Police_Reports_2016";
-proc sql;
-    select
-        nmiss(Charge_Description)as missing
-    from
-	Police_Reports_2016
+    title "Charge Description in Police_Reports_2016";
+    proc sql;
+        select
+            nmiss(Charge_Description)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Occured Date Time Description in Police_Reports_2017";
-proc sql;
-    select
-        nmiss(Occured_Date_Time)as missing
-    from
-	Police_Reports_2017
+    title "Occured Date Time Description in Police_Reports_2017";
+    proc sql;
+        select
+            nmiss(Occured_Date_Time)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Occured Date Time Description in Police_Reports_2016";
-proc sql;
-    select
-        nmiss(Occured_Date_Time)as missing
-    from
-	Police_Reports_2016
+    title "Occured Date Time Description in Police_Reports_2016";
+    proc sql;
+        select
+            nmiss(Occured_Date_Time)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Offender Race Description in Police_Reports_2017";
-proc sql;
-    select
-        nmiss(Offender_Race)as missing
-    from
-	Police_Reports_2017
+    title "Offender Race Description in Police_Reports_2017";
+    proc sql;
+        select
+            nmiss(Offender_Race)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Offender Race Description in Police_Reports_2016";
-proc sql;
-    select
-        nmiss(Offender_Race)as missing
-    from
-	Police_Reports_2016
+    title "Offender Race Description in Police_Reports_2016";
+    proc sql;
+        select
+            nmiss(Offender_Race)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Offender Gender Description in Police_Reports_2017";
-proc sql;
-    select
-        nmiss(Offender_Gender)as missing
-    from
-		Police_Reports_2017
+    title "Offender Gender Description in Police_Reports_2017";
+    proc sql;
+        select
+            nmiss(Offender_Gender)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Offender Gender Description in Police_Reports_2016";
-proc sql;
-    select
-        nmiss(Offender_Gender)as missing
-    from
-	Police_Reports_2016
+    title "Offender Gender Description in Police_Reports_2016";
+    proc sql;
+        select
+            nmiss(Offender_Gender)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Victim Gender Description in Police_Reports_2017";
-proc sql;
-    select
-        nmiss(Victim_Gender)as missing
-    from
-	Police_Reports_2017
+    title "Victim Gender Description in Police_Reports_2017";
+    proc sql;
+        select
+            nmiss(Victim_Gender)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Victim Gender Description in Police_Reports_2016";
-proc sql;
-    select
-        nmiss(Victim_Gender)as missing
-    from
-	Police_Reports_2016
+    title "Victim Gender Description in Police_Reports_2016";
+    proc sql;
+        select
+            nmiss(Victim_Gender)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Victim Race Description in Police_Reports_2017";
-proc sql;
-    select
-        nmiss(Victim_Race)as missing
-    from
-	Police_Reports_2017
+    title "Victim Race Description in Police_Reports_2017";
+    proc sql;
+        select
+            nmiss(Victim_Race)as missing
+        from
+	    Police_Reports_2017
 	;
-quit;
-title;
+    quit;
+    title;
 
-title "Victim Race Description in Police_Reports_2016";
-proc sql;
-    select
-        nmiss(Victim_Race)as missing
-    from
-	Police_Reports_2016
+    title "Victim Race Description in Police_Reports_2016";
+    proc sql;
+        select
+            nmiss(Victim_Race)as missing
+        from
+	    Police_Reports_2016
 	;
-quit;
-title;
+    quit;
+    title;
+    */
 
 
 *combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using
-a data-step match-merge [need to fix error];
+ a data-step match-merge;
+*note: After running the data step and proc sort step below several times
+ and averaging the fullstimer output in the system log, they tend to take
+ about 0.76 seconds of combined "real time" to execute and a maximum of
+ about 43752.34k of memory (983.25k for the data step vs. 42669.09k for the
+ proc sort step) on the computer they were tested on;
 
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
-	InitialTypeText
-	Zip
-	TimeDispatch
-	TimeArrive
 	;
     keep
 	NOPD_Item
-	InitialTypeText
-	Zip
-	TimeDispatch
-	TimeArrive
 	;
     merge
-	Calls_for_Service_2017
+        Calls_for_Service_2017
         Calls_for_Service_2016
 	;
     by NOPD_Item;
 run;
+
 proc sort data = Calls_for_Service_1617_v1;
     by NOPD_Item;
 run;
 
 *combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using 
-proc sql;
+ proc sql;
+*note: After running the proc sql step below several times and averaging
+ the fullstimer output in the system log, they tend to take about 0.49
+ seconds of "real time" to execute and about 30650.37k of memory on the computer
+ they were tested on. Consequently, the proc sql step appears to be faster to 
+ execute as the combined data step and proc sort steps above, and uses less 
+ memory;
 proc sql;
     create table Calls_for_Service_1617_v2 as
 	select
 	    coalesce(A.NOPD_Item, B.NOPD_Item) as NOPD_Item
-	    ,coalesce(A.InitialTypeText, B.InitialTypeText) as InitialTypeText
-	    ,coalesce(A.Zip, B.Zip) as Zip
-	    ,coalesce(A.TimeDispatch, B.TimeDispatch) as TimeDispatch
-	    ,coalesce(A.TimeArrive, B.TimeArrive) as TimeArrive
 	from
 	    Calls_for_Service_2017 as A
 	    full join
@@ -673,7 +640,63 @@ quit;
 *verify that Calls_for_Service_1617_v1 and Calls_for_Service_1617_v2 are identical;
 proc compare
         base = Calls_for_Service_1617_v1
-	compare = Calls_for_Service_1617_v2
-	novalues
-	;
+        compare = Calls_for_Service_1617_v2
+        novalues
+        ;
 run;
+
+*combine Police_Reports_2017 and Police_Reports_2016 horizontally using
+ a data-step match-merge;
+*note: After running the data step and proc sort step below several times
+ and averaging the fullstimer output in the system log, they tend to take
+ about 0.11 seconds of combined "real time" to execute and a maximum of
+ about 6941.99k of memory (985.68k for the data step vs. 5956.31k for the
+ proc sort step) on the computer they were tested on;
+data Police_Reports_1617_v1;
+    retain
+        Item_Number
+	;
+    keep
+	Item_Number
+	;
+    merge
+        Police_Reports_2017
+        Police_Reports_2016
+	;
+    by Item_Number;
+run;
+
+proc sort data = Police_Reports_1617_v1;
+    by Item_Number;
+run;
+
+*combine Police_Reports_2017 and Police_Reports_2016 horizontally using 
+ proc sql;
+*note: After running the proc sql step below several times and averaging
+ the fullstimer output in the system log, they tend to take about 0.09
+ seconds of "real time" to execute and about 9522.46k of memory on the computer
+ they were tested on. Consequently, the proc sql step appears to be faster to 
+ execute as the combined data step and proc sort steps above, but uses more
+ memory;
+proc sql;
+    create table Police_Reports_1617_v2 as
+	select
+	    coalesce(A.Item_Number, B.Item_Number) as Item_Number
+	from
+	    Police_Reports_2017 as A
+	    full join
+	    Police_Reports_2016 as B
+	    on A.Item_Number = B.Item_Number
+	order by
+            Item_Number
+	;
+quit;
+
+*verify that Police_Reports_1617_v1 and Police_Reports_v2 are identical;
+proc compare
+        base = Police_Reports_1617_v1
+        compare = Police_Reports_1617_v2
+        novalues
+        ;
+run;
+
