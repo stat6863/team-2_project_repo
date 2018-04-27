@@ -27,9 +27,8 @@ Calls_for_Service_2017 to combine the column and groups by day of the week to
 "Weekday" from each year that has a unique NOPD Item Number. 
 
 Limitations: The weekday format converts the datetime value into a weekday 
-number making it difficult to read the data. 
-
-Follow Up: Use a format proc to convert the numbers into names.
+number making it difficult to read the data. Should use a format proc to 
+convert the numbers into names
 ;
 
 *******************************************************************************;
@@ -45,8 +44,9 @@ Note: This compares the column "Item_Number" from Electronic_Police_Report_2016
 to the column of the same name from Electronic_Police_Report_2017 to combine 
 the column "Offender_Age" from each year that has a unique Item Number.
 
-Limitations: When merging the two datasets there may be some duplicates
-that appear in both. Using Union instead of Union All will remove them.
+Limitations: Values of Item_Number from the datasets 
+Electronic_Police_Report_2016 and Electronic_Police_Report_2017 that are blank
+should be excluded. 
 
 ;
 
@@ -64,7 +64,8 @@ Note: This compares the column "District" from Electronic_Police_Report_2016
 where the column "Signal_Description" includes "Homicide" and that which has a 
 unique Item_Number.
 
-Limitations: Some rows have missing data, removing these rows will ensure that 
-the analysis will go smoothly.
+Limitations: Rows with missing District data should be excluded since they are
+missing data. Rows with missing Signal Description values should be excluded 
+because they are missing data. 
 ;
 
