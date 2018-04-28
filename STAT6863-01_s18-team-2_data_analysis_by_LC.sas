@@ -30,7 +30,22 @@ Limitations: The weekday format converts the datetime value into a weekday
 number making it difficult to read the data. Should use a format proc to 
 convert the numbers into names
 ;
+proc sql;
+	create table CallsForService1617Day as
+	SELECT TimeDispatch FROM Calls_for_Service_1617_v2
+	;
+quit;
+DATA weekday;
+  SET CallsForService1617Day;
+  Weekday=datepart(TimeDispatch);
+  format Weekday weekdate3.;
+RUN;
 
+proc freq  
+	order=freq
+	data = weekday;
+	tables weekday / norow nocum out=counts;
+run;
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;

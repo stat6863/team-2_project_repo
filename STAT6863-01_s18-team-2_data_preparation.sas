@@ -165,16 +165,16 @@ proc sql;
        see that Calls_for_Service_2017 contains no rows, so no mitigation is
        needed to ensure uniqueness */
     create table Calls_for_Service_2017_dups as
-	select
-            NOPD_Item
-	    ,count(*) as row_count_for_unique_id_values
-        from 
-	    Calls_for_Service_2017_raw
-	group by
-	    NOPD_Item
-	having
-            row_count_for_unique_id_values > 1
-	;
+		select
+	        NOPD_Item
+		    ,count(*) as row_count_for_unique_id_values
+	    from 
+		    Calls_for_Service_2017_raw
+		group by
+		    NOPD_Item
+		having
+	            row_count_for_unique_id_values > 1
+		;
     /*remove rows with missing unique id components; after executing this
       query, the new dataset Calls_for_Service_2017 will have no duplicate/
       repeated unique id values, and all unique id values will correspond to
@@ -229,13 +229,13 @@ proc sql;
     our experimental units of interest, which are calls made to the New 
     Orleans Police Department*/
     create table Calls_for_Service_2016 as
-	select
-	    *
-	from
-	    Calls_for_Service_2016_raw_sort
-	where
-	    /* remove rows with missing unique id value components */
-	    not(missing(NOPD_Item))
+		select
+		    *
+		from
+		    Calls_for_Service_2016_raw_sort
+		where
+		    /* remove rows with missing unique id value components */
+		    not(missing(NOPD_Item))
 	;
 quit;
 
@@ -245,17 +245,17 @@ Item_Number is the primary key;
 proc sql;
     /* check for duplicate unique id values; after executing this query, we 
        see that Police_Reports_2017 contains rows which are duplicates,
-       which we can mitigate as part of eliminating rows having duplicate unique 
-       id component*/
+       which we can mitigate as part of eliminating rows having duplicate 
+		unique id component*/
     create table Police_Reports_2017_dups as
     select
-	Item_Number
-	,count(*) as row_count_for_unique_id_values
+		Item_Number
+		,count(*) as row_count_for_unique_id_values
     from 
-	Police_Reports_2017_raw
+		Police_Reports_2017_raw
     group by
-	Item_Number
-    having
+		Item_Number
+	    having
         row_count_for_unique_id_values > 1
     ;
 quit;
@@ -277,13 +277,13 @@ proc sql;
       our experimental units of interest, which are reports filed to the New 
       Orleans Police Department*/
     create table Police_Reports_2017 as
-        select
-	    *
-	from
-	    Police_Reports_2017_raw_sort
-	where
+    	select
+	    	*
+		from
+	    	Police_Reports_2017_raw_sort
+		where
 	    /* remove rows with missing unique id value components */
-	    not(missing(Item_Number))
+	    	not(missing(Item_Number))
 	;
 quit;
 
@@ -297,10 +297,10 @@ proc sql;
        id component*/
     create table Police_Reports_2016_dups as
         select
-	    Item_Number
-	    ,count(*) as row_count_for_unique_id_values
+		    Item_Number
+		    ,count(*) as row_count_for_unique_id_values
         from 
-	    Police_Reports_2016_raw
+	    	Police_Reports_2016_raw
 	group by
 	    Item_Number
 	having
@@ -336,7 +336,7 @@ proc sql;
 quit;
 
 *inspect columns of interest in cleaned version of datasets;
-  
+/*
 title "Zip in Calls_for_Service_2017";
 proc sql;
     select
@@ -346,7 +346,7 @@ proc sql;
         ,median(Zip) as max
         ,nmiss(Zip)as missing
     from
-	Calls_for_Service_2017
+		Calls_for_Service_2017
 	;
 quit;
 title;
@@ -354,13 +354,13 @@ title;
 title "Zip in Calls_for_Service_2016";
 proc sql;
     select
-	min(Zip) as min
+		min(Zip) as min
         ,max(Zip) as max
         ,mean(Zip) as max
         ,median(Zip) as max
         ,nmiss(Zip)as missing
     from
-	Calls_for_Service_2016
+		Calls_for_Service_2016
 	;
 quit;
 title;
@@ -370,7 +370,7 @@ proc sql;
     select
         nmiss(InitialTypeText)as missing
     from
-	Calls_for_Service_2017
+		Calls_for_Service_2017
 	;
 quit;
 title;
@@ -380,7 +380,7 @@ proc sql;
     select
         nmiss(InitialTypeText)as missing
     from
-	Calls_for_Service_2016
+		Calls_for_Service_2016
 	;
 quit;
 title;
@@ -390,7 +390,7 @@ proc sql;
     select
         nmiss(TimeDispatch)as missing
     from
-	Calls_for_Service_2017
+		Calls_for_Service_2017
 	;
 quit;
 title;
@@ -400,7 +400,7 @@ proc sql;
     select
         nmiss(TimeDispatch)as missing
     from
-	Calls_for_Service_2016
+		Calls_for_Service_2016
 	;
 quit;
 title;
@@ -410,7 +410,7 @@ proc sql;
     select
         nmiss(TimeArrive)as missing
     from
-	Calls_for_Service_2017
+		Calls_for_Service_2017
 	;
 quit;
 title;
@@ -420,7 +420,7 @@ proc sql;
     select
         nmiss(TimeArrive)as missing
     from
-	Calls_for_Service_2016
+		Calls_for_Service_2016
 	;
 quit;
 title;
@@ -430,7 +430,7 @@ proc sql;
     select
         nmiss(Priority)as missing
     from
-	Calls_for_Service_2017
+		Calls_for_Service_2017
 	;
 quit;
 title;
@@ -440,7 +440,7 @@ proc sql;
     select
         nmiss(Priority)as missing
     from
-	Calls_for_Service_2016
+		Calls_for_Service_2016
 	;
 quit;
 title;
@@ -454,7 +454,7 @@ proc sql;
         ,median(Offender_Age) as max
         ,nmiss(Offender_Age)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
@@ -468,7 +468,7 @@ proc sql;
         ,median(Offender_Age) as max
         ,nmiss(Offender_Age)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
@@ -482,7 +482,7 @@ proc sql;
         ,median(District) as max
         ,nmiss(District)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
@@ -496,17 +496,17 @@ proc sql;
         ,median(District) as max
         ,nmiss(District)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
-
+/*
 title "Charge Description in Police_Reports_2017";
 proc sql;
     select
         nmiss(Charge_Description)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
@@ -516,7 +516,7 @@ proc sql;
     select
         nmiss(Charge_Description)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
@@ -524,9 +524,9 @@ title;
 title "Occured Date Time Description in Police_Reports_2017";
 proc sql;
     select
-        nmiss(Occured_Date_Time)as missing
+        nmiss(Occurred_Date_Time)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
@@ -534,9 +534,9 @@ title;
 title "Occured Date Time Description in Police_Reports_2016";
 proc sql;
     select
-        nmiss(Occured_Date_Time)as missing
+        nmiss(Occurred_Date_Time)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
@@ -546,7 +546,7 @@ proc sql;
     select
         nmiss(Offender_Race)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
@@ -556,7 +556,7 @@ proc sql;
     select
         nmiss(Offender_Race)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
@@ -576,7 +576,7 @@ proc sql;
     select
         nmiss(Offender_Gender)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
@@ -586,7 +586,7 @@ proc sql;
     select
         nmiss(Victim_Gender)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
@@ -600,58 +600,70 @@ proc sql;
 	;
 quit;
 title;
-
+/*
 title "Victim Race Description in Police_Reports_2017";
 proc sql;
     select
         nmiss(Victim_Race)as missing
     from
-	Police_Reports_2017
+		Police_Reports_2017
 	;
 quit;
 title;
-
+/*
 title "Victim Race Description in Police_Reports_2016";
 proc sql;
     select
         nmiss(Victim_Race)as missing
     from
-	Police_Reports_2016
+		Police_Reports_2016
 	;
 quit;
 title;
+*/
 
+*combine Calls_for_Service_2017 and Calls_for_Service_2016 
+horizontally usinga data-step match-merge. The data step took 2.21
+real time seconds and  1005.15k memory to complete. The proc sort
+step took 0.87 real time seconds and 164189.46k memory to complete
 
-*combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using
-a data-step match-merge [need to fix error];
+;
 
+proc sort data = CALLS_FOR_SERVICE_2017;
+    by NOPD_Item;
+run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
-	InitialTypeText
-	Zip
-	TimeDispatch
-	TimeArrive
-	;
+		InitialTypeText
+		Zip
+		TimeDispatch
+		TimeArrive
+		;
     keep
-	NOPD_Item
-	InitialTypeText
-	Zip
-	TimeDispatch
-	TimeArrive
-	;
+		NOPD_Item
+		InitialTypeText
+		Zip
+		TimeDispatch
+		TimeArrive
+		;
     merge
-	Calls_for_Service_2017
         Calls_for_Service_2016
+		Calls_for_Service_2017
 	;
-    by NOPD_Item;
+    	by NOPD_Item;
 run;
 proc sort data = Calls_for_Service_1617_v1;
     by NOPD_Item;
 run;
 
 *combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using 
-proc sql;
+proc sql. With a real time of 1.37 seconds and a memory of 103826.43k, the
+proc sql took significantly more memory resources than the data step and proc sort
+steps above combined. The real time use was less than the data step and proc sort
+steps above. If the if memory performance isn't critical, proc sql should be
+used.
+;
 proc sql;
     create table Calls_for_Service_1617_v2 as
 	select
@@ -669,10 +681,80 @@ proc sql;
             NOPD_Item
 	;
 quit;
-
 *verify that Calls_for_Service_1617_v1 and Calls_for_Service_1617_v2 are identical;
 proc compare
-        base = Calls_for_Service_1617_v1
+    base = Calls_for_Service_1617_v1
+	compare = Calls_for_Service_1617_v2
+	novalues
+	;
+run;
+
+
+
+
+
+*combine Calls_for_Service_2017 and Calls_for_Service_2016 
+horizontally usinga data-step match-merge. The data step took 2.21
+real time seconds and  1005.15k memory to complete. The proc sort
+step took 0.87 real time seconds and 164189.46k memory to complete
+
+;
+
+proc sort data = CALLS_FOR_SERVICE_2017;
+    by NOPD_Item;
+run;
+data Calls_for_Service_1617_v1;
+    retain
+        NOPD_Item
+		InitialTypeText
+		Zip
+		TimeDispatch
+		TimeArrive
+		;
+    keep
+		NOPD_Item
+		InitialTypeText
+		Zip
+		TimeDispatch
+		TimeArrive
+		;
+    merge
+        Calls_for_Service_2016
+		Calls_for_Service_2017
+	;
+    	by NOPD_Item;
+run;
+proc sort data = Calls_for_Service_1617_v1;
+    by NOPD_Item;
+run;
+
+*combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using 
+proc sql. With a real time of 1.37 seconds and a memory of 103826.43k, the
+proc sql took significantly more memory resources than the data step and proc sort
+steps above combined. The real time use was less than the data step and proc sort
+steps above. If the if memory performance isn't critical, proc sql should be
+used.
+;
+proc sql;
+    create table Calls_for_Service_1617_v2 as
+	select
+	    coalesce(A.NOPD_Item, B.NOPD_Item) as NOPD_Item
+	    ,coalesce(A.InitialTypeText, B.InitialTypeText) as InitialTypeText
+	    ,coalesce(A.Zip, B.Zip) as Zip
+	    ,coalesce(A.TimeDispatch, B.TimeDispatch) as TimeDispatch
+	    ,coalesce(A.TimeArrive, B.TimeArrive) as TimeArrive
+	from
+	    Calls_for_Service_2017 as A
+	    full join
+	    Calls_for_Service_2016 as B
+	    on A.NOPD_Item = B.NOPD_Item
+	order by
+            NOPD_Item
+	;
+quit;
+*verify that Calls_for_Service_1617_v1 and Calls_for_Service_1617_v2 are identical;
+proc compare
+    base = Calls_for_Service_1617_v1
 	compare = Calls_for_Service_1617_v2
 	novalues
 	;
