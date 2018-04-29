@@ -62,8 +62,16 @@ the column "Offender_Age" from each year that has a unique Item Number.
 Limitations: Values of Item_Number from the datasets 
 Electronic_Police_Report_2016 and Electronic_Police_Report_2017 that are blank
 should be excluded. 
-
 ;
+ proc SQL;
+ 	create table age_mean as
+	select mean(Offender_Age)
+	from (
+		select Offender_Age from Police_Reports_2016
+		union
+		select Offender_Age from Police_Reports_2017)
+;
+quit;
 
 
 *******************************************************************************;
@@ -83,4 +91,13 @@ Limitations: Rows with missing District data should be excluded since they are
 missing data. Rows with missing Signal Description values should be excluded 
 because they are missing data. 
 ;
-
+ proc SQL;
+ 	create table district_counts as
+	select count(Item_Number) as Total
+	from (
+		select Item_Number,District from Police_Reports_2016
+		union
+		select Item_Number,District from Police_Reports_2017)
+		group by District
+;
+quit;
