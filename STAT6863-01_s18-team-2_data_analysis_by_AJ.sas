@@ -4,19 +4,19 @@
 *******************************************************************************;
 
 * set relative file import path to current directory (using standard SAS trick);
+* set relative file import path to current directory (using standard SAS trick);
 X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPATH))-%length(%sysget(SAS_EXECFILENAME))))""";
 
 
 * load external file that will generate final analytic file;
-%include '.\STAT6863-02_s18-team-2_data_preparation';
+%include '.\STAT6863-01_s18-team-2_data_preparation';
 
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Does the season of the year influence the types of crimes that are 
-committed?
+Question: How does the frequency of crime change over the course of a year?
 
 Rationale: This should help police officers and the public to prepare for 
 certain crimes being committed because of possible weather influences (i.e., 
@@ -29,6 +29,20 @@ Limitations: Values of Charge Description and Occurred Date Time that are
 blank should be excluded from this analysis, since they are potentially 
 missing data values.
 ;
+
+PROC SQL;
+	create table ElectronicPoliceReport1617season as
+	SELECT Occurred_Date_Time FROM Police_reports_1617_v2
+	;
+quit;
+
+DATA datemonth;
+	set Police_reports_1617_v2;
+	dmonth=datepart(Occurred_Date_Time);
+	format dmonth mmddyy10.;
+run;
+
+
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -70,3 +84,5 @@ Limitations: Values of Priority and Offender Race, Offender Gender, Victim Race,
 and Victim Gender that are blank should be excluded from this analysis, 
 since they are potentially missing data values.
 ;
+
+PROC reg data=police
