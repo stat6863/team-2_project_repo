@@ -597,6 +597,9 @@ run;
  about 43752.34k of memory (983.25k for the data step vs. 42669.09k for the
  proc sort step) on the computer they were tested on;
 
+proc sort data = CALLS_FOR_SERVICE_2017;
+    by NOPD_Item;
+run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
@@ -605,8 +608,8 @@ data Calls_for_Service_1617_v1;
 	NOPD_Item
 	;
     merge
-        Calls_for_Service_2017
-        Calls_for_Service_2016
+    	Calls_for_Service_2016
+        Calls_for_Service_2017        
 	;
     by NOPD_Item;
 run;
