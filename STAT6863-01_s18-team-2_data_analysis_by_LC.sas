@@ -32,14 +32,14 @@ convert the numbers into names
 ;
 proc sql;
 	create table CallsForService1617Day as
-	SELECT TimeDispatch FROM Calls_for_Service_1617_v2
+	select TimeDispatch FROM Calls_for_Service_1617_v2
 	;
 quit;
-DATA weekday;
-  SET CallsForService1617Day;
+data weekday;
+  set CallsForService1617Day;
   Weekday=datepart(TimeDispatch);
   format Weekday weekdate3.;
-RUN;
+run;
 
 proc freq  
 	order=freq
@@ -95,9 +95,11 @@ because they are missing data.
  	create table district_counts as
 	select count(Item_Number) as Total
 	from (
-		select Item_Number,District from Police_Reports_2016
+		select Item_Number
+		,District from Police_Reports_2016
 		union
-		select Item_Number,District from Police_Reports_2017)
+		select Item_Number
+		,District from Police_Reports_2017)
 		group by District
 ;
 quit;
