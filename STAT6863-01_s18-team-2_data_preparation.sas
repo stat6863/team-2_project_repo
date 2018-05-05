@@ -307,7 +307,7 @@ being defined as more than one type.;
 data Calls_for_Service_2017;
     set Calls_for_Service_2017
     ;
-    num1 = input(NOPD_Item, $10.)
+    num1 = input(NOPD_Item, best10.)
     ;
     num2 = put(InitalTypeText, $20.)
     ;
@@ -324,7 +324,7 @@ run;
 data Calls_for_Service_2016;
     set Calls_for_Service_2016
     ;
-    num1 = input(NOPD_Item, $10.)
+    num1 = input(NOPD_Item, best10.)
     ;
     num2 = put(InitalTypeText, $20.)
     ;
@@ -343,11 +343,11 @@ being defined as more than one type.;
 data Police_Reports_2017;
     set Police_Reports_2017
     ;
-    num1 = input(Item_Number, $10.)
+    num1 = input(Item_Number, best10.)
     ;
     num2 = put(Signal_Description, $43.)
     ;
-    num3 = input(Offender_Age, $3.)
+    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
@@ -364,11 +364,11 @@ run;
 data Police_Reports_2016;
     set Police_Reports_2016
     ;
-    num1 = input(Item_Number, $10.)
+    num1 = input(Item_Number, best10.)
     ;
     num2 = put(Signal_Description, $43.)
     ;
-    num3 = input(Offender_Age, $3.)
+    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
