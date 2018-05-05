@@ -72,8 +72,8 @@ proc sql;
     select
 	min(Offender_Age) as min
         ,max(Offender_Age) as max
-        ,mean(Offender_Age) as max
-        ,median(Offender_Age) as max
+        ,mean(Offender_Age) as mean
+        ,median(Offender_Age) as median
         ,nmiss(Offender_Age)as missing
     from
 	Police_Reports_1617_v2
