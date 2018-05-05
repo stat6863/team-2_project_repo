@@ -301,6 +301,56 @@ proc sort
     ;
 run;
 
+
+*convert variable values of NOPD_Item from character to numeric due to variables
+being defined as more than one type.;
+data Calls_for_Service_2017;
+    set Calls_for_Service_2017
+    ;
+    num1 = input(NOPD_Item, $8.)
+    ;
+    drop NOPD_Item
+    ;
+    rename num1 = NOPD_Item
+    ;
+run;
+
+data Calls_for_Service_2016;
+    set Calls_for_Service_2016
+    ;
+    num1 = input(NOPD_Item, $8.)
+    ;
+    drop NOPD_Item
+    ;
+    rename num1 = NOPD_Item
+    ;
+run;
+
+*convert variable values of Item_Number from character to numeric due to variables
+being defined as more than one type.;
+data Police_Reports_2017;
+    set Police_Reports_2017
+    ;
+    num1 = input(Item_Number, $8.)
+    ;
+    drop Item_Number
+    ;
+    rename num1 = Item_Number
+    ;
+run;
+
+data Police_Reports_2016;
+    set Police_Reports_2016
+    ;
+    num1 = input(Item_Number, $8.)
+    ;
+    drop Item_Number
+    ;
+    rename num1 = Item_Number
+    ;
+run;
+
+
 *inspect columns of interest in cleaned version of datasets;
     /*  
     title "Zip in Calls_for_Service_2017";
@@ -700,3 +750,75 @@ proc compare
         ;
 run;
 
+
+*combine Calls_for_Service_1617_v1 and Police_Reports_1617_v1 vertically using
+ a data-step interweave, combining composite key values into a single primary
+ key value;
+*note: After running the data step and proc sort step below several times
+ and averaging the fullstimer output in the system log, they tend to take
+ about 0.39 seconds of combined "real time" to execute and a maximum of
+ about 50527.87k of memory (965.78k for the data step vs. 49562.09k for the
+ proc sort step) on the computer they were tested on;
+
+data CFS1617_and_PR1617_v1;
+    retain
+        NOPD_Item
+    ;
+    keep
+        NOPD_Item
+    ;
+    set
+        Calls_for_Service_1617_v1
+        Police_Reports_1617_v1(
+            rename = (
+                Item_Number = NOPD_Item
+            )
+        )
+    ;
+    by
+        NOPD_Item
+    ;
+run;
+
+proc sort data = CFS1617_and_PR1617_v1;
+    by NOPD_Item;
+run;
+
+
+*combine Calls_for_Service_1617_v2 and Police_Reports_1617_v2 vertically using
+proc sql;
+*note: After running the proc sql step below several times and averaging
+ the fullstimer output in the system log, they tend to take about 0.29
+ seconds of "real time" to execute and about 35177.28k of memory on the computer
+ they were tested on. Consequently, the proc sql step appears to be faster to 
+ execute as the combined data step and proc sort steps above, and uses more
+ memory;
+
+proc sql;
+    create table CFS1617_and_PR1617_v2 as 
+        (
+            select
+                NOPD_Item
+            from
+                Calls_for_Service_1617_v2
+         )
+        outer union corr
+        (
+            select
+                Item_Number
+                AS NOPD_Item
+            from
+                Police_Reports_1617_v2
+        )
+        order by
+            NOPD_Item
+    ;
+quit;
+
+*verify that CFS1617_and_PR1617_v1 and CFS1617_and_PR1617_v2 are identical;
+proc compare
+        base = CFS1617_and_PR1617_v1
+        compare = CFS1617_and_PR1617_v2
+        novalues
+    ;
+run;
