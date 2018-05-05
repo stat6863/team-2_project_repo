@@ -332,16 +332,16 @@ data Police_Reports_2017;
     set Police_Reports_2017
     ;
     num1 = input(Item_Number, $8.)
-	;
-	num2 = put(Signal_Description, $43.)
+    ;
+    num2 = put(Signal_Description, $43.)
     ;
     drop 
-		Item_Number
-		Signal_Description
+        Item_Number
+        Signal_Description
     ;
     rename 
-		num1 = Item_Number
-		num2 = Signal_Description
+	num1 = Item_Number
+	num2 = Signal_Description
     ;
 run;
 
@@ -656,11 +656,11 @@ run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
-		TimeDispatch
+	TimeDispatch
 	;
     keep
-		NOPD_Item
-		TimeDispatch
+	NOPD_Item
+	TimeDispatch
 	;
     merge
         Calls_for_Service_2017
@@ -685,7 +685,7 @@ proc sql;
     create table Calls_for_Service_1617_v2 as
 	select
 	    coalesce(A.NOPD_Item, B.NOPD_Item) as NOPD_Item
-		,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
+	    ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
 	from
 	    Calls_for_Service_2017 as A
 	    full join
@@ -714,11 +714,11 @@ run;
 data Police_Reports_1617_v1;
     retain
         Item_Number
-		Offender_Age
+	Offender_Age
 	;
     keep
-		Item_Number
-		Offender_Age
+	Item_Number
+	Offender_Age
 	;
     merge
         Police_Reports_2017
@@ -742,8 +742,8 @@ run;
 proc sql;
     create table Police_Reports_1617_v2 as
 	select
-	    coalesce(A.Item_Number, B.Item_Number) as Item_Number,
-		coalesce(A.Offender_Age, B.Offender_Age) as Offender_Age
+	    coalesce(A.Item_Number, B.Item_Number) as Item_Number
+	    ,coalesce(A.Offender_Age, B.Offender_Age) as Offender_Age
 	from
 	    Police_Reports_2017 as A
 	    full join
