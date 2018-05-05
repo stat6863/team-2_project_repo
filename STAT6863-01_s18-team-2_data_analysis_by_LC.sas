@@ -96,7 +96,8 @@ because they are missing data.
 
  proc sql;
 		select 
-			District, count(Item_Number) as Total
+			District
+			,count(Item_Number) as Total
 		from 
 			(
 			select 
