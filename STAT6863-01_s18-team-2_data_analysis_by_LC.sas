@@ -8,7 +8,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 * load external file that will generate final analytic file;
-%include '.\STAT6863-01_s18-team-2_data_preparation';
+%include '.\STAT6863-01_s18-team-2_data_preparation.sas';
 
 
 *******************************************************************************;
@@ -69,15 +69,10 @@ should be excluded.
 ;
 
  proc sql;
- 	create table age_mean as
-		select 
-			mean(Offender_Age)
-		from 
-			(
-			select Offender_Age from Police_Reports_2016
-			union
-			select Offender_Age from Police_Reports_2017
-			)
+	select 
+		mean(Offender_Age) as MeanOffenderAge
+	from 
+		Police_Reports_1617_v2
 	;
 quit;
 
@@ -100,9 +95,8 @@ because they are missing data.
 ;
 
  proc sql;
- 	create table district_counts as
 		select 
-			count(Item_Number) as Total
+			District, count(Item_Number) as Total
 		from 
 			(
 			select 
@@ -114,5 +108,6 @@ because they are missing data.
 				,District from Police_Reports_2017
 			)
 		group by District
+		order by Total desc
 	;
 quit;
