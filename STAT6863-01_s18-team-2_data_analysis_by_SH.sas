@@ -67,9 +67,19 @@ Limitations: Values of Offender_Age equal to zero or blank should be excluded
 from this analysis, since they are potentially missing data values.
 ;
 
-proc means data = Police_Reports_1617_v2;
-run;
 
+proc sql;
+    select
+	min(Offender_Age) as min
+        ,max(Offender_Age) as max
+        ,mean(Offender_Age) as max
+        ,median(Offender_Age) as max
+        ,nmiss(Offender_Age)as missing
+    from
+	Police_Reports_1617_v2
+    ;
+quit;
+   
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
