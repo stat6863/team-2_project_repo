@@ -307,22 +307,34 @@ being defined as more than one type.;
 data Calls_for_Service_2017;
     set Calls_for_Service_2017
     ;
-    num1 = input(NOPD_Item, $8.)
+    num1 = input(NOPD_Item, best10.)
     ;
-    drop NOPD_Item
+    num2 = put(InitalTypeText, $20.)
     ;
-    rename num1 = NOPD_Item
+    drop 
+        NOPD_Item
+        InitalTypeTeext
+    ;
+    rename 
+        num1 = NOPD_Item
+        num2 = InitialTypeText
     ;
 run;
 
 data Calls_for_Service_2016;
     set Calls_for_Service_2016
     ;
-    num1 = input(NOPD_Item, $8.)
+    num1 = input(NOPD_Item, best10.)
     ;
-    drop NOPD_Item
+    num2 = put(InitalTypeText, $20.)
     ;
-    rename num1 = NOPD_Item
+    drop 
+        NOPD_Item
+        InitalTypeTeext
+    ;
+    rename 
+        num1 = NOPD_Item
+        num2 = InitialTypeText
     ;
 run;
 
@@ -331,29 +343,42 @@ being defined as more than one type.;
 data Police_Reports_2017;
     set Police_Reports_2017
     ;
-    num1 = input(Item_Number, $8.)
+    num1 = input(Item_Number, best10.)
     ;
     num2 = put(Signal_Description, $43.)
+    ;
+    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
         Signal_Description
+        Offender_Age
     ;
     rename 
 	num1 = Item_Number
 	num2 = Signal_Description
+	num3 = Offender_Age
     ;
 run;
 
 data Police_Reports_2016;
     set Police_Reports_2016
     ;
-    num1 = input(Item_Number, $8.)
+    num1 = input(Item_Number, best10.)
     ;
-    drop Item_Number
+    num2 = put(Signal_Description, $43.)
     ;
-    rename num1 = Item_Number
+    num3 = input(Offender_Age, best3.)
     ;
+    drop 
+        Item_Number
+        Signal_Description
+        Offender_Age
+    ;
+    rename 
+	num1 = Item_Number
+	num2 = Signal_Description
+	num3 = Offender_Age
 run;
 
 
@@ -364,8 +389,8 @@ run;
         select
 	    min(Zip) as min
             ,max(Zip) as max
-            ,mean(Zip) as max
-            ,median(Zip) as max
+            ,mean(Zip) as mean
+            ,median(Zip) as median
             ,nmiss(Zip)as missing
         from
 	    Calls_for_Service_2017
@@ -378,8 +403,8 @@ run;
         select
 	    min(Zip) as min
             ,max(Zip) as max
-            ,mean(Zip) as max
-            ,median(Zip) as max
+            ,mean(Zip) as mean
+            ,median(Zip) as median
             ,nmiss(Zip)as missing
         from
 	    Calls_for_Service_2016
@@ -472,8 +497,8 @@ run;
         select
 	    min(Offender_Age) as min
             ,max(Offender_Age) as max
-            ,mean(Offender_Age) as max
-            ,median(Offender_Age) as max
+            ,mean(Offender_Age) as mean
+            ,median(Offender_Age) as median
             ,nmiss(Offender_Age)as missing
         from
 	    Police_Reports_2017
@@ -486,8 +511,8 @@ run;
         select
 	    min(Offender_Age) as min
             ,max(Offender_Age) as max
-            ,mean(Offender_Age) as max
-            ,median(Offender_Age) as max
+            ,mean(Offender_Age) as mean
+            ,median(Offender_Age) as median
             ,nmiss(Offender_Age)as missing
         from
 	    Police_Reports_2016
@@ -500,8 +525,8 @@ run;
         select
 	    min(District) as min
             ,max(District) as max
-            ,mean(District) as max
-            ,median(District) as max
+            ,mean(District) as mean
+            ,median(District) as median
             ,nmiss(District)as missing
         from
 	    Police_Reports_2017
@@ -514,8 +539,8 @@ run;
         select
 	    min(District) as min
             ,max(District) as max
-            ,mean(District) as max
-            ,median(District) as max
+            ,mean(District) as mean
+            ,median(District) as median
             ,nmiss(District)as missing
         from
 	    Police_Reports_2016
@@ -656,11 +681,15 @@ run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
+	InitalTypeText
 	TimeDispatch
+	Zip
 	;
     keep
 	NOPD_Item
+	InitalTypeText
 	TimeDispatch
+	Zip
 	;
     merge
         Calls_for_Service_2017
@@ -684,8 +713,11 @@ run;
 proc sql;
     create table Calls_for_Service_1617_v2 as
 	select
-	    coalesce(A.NOPD_Item, B.NOPD_Item) as NOPD_Item
+	    coalesce(A.NOPD_Item,B.NOPD_Item) as NOPD_Item
+	    ,coalesce(A.InitalTypeText,B.InitalTypeText) as InitalTypeText
 	    ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
+	    ,coalesce(A.Zip,B.Zip) as Zip
+	    
 	from
 	    Calls_for_Service_2017 as A
 	    full join
@@ -742,8 +774,8 @@ run;
 proc sql;
     create table Police_Reports_1617_v2 as
 	select
-	    coalesce(A.Item_Number, B.Item_Number) as Item_Number
-	    ,coalesce(A.Offender_Age, B.Offender_Age) as Offender_Age
+	    coalesce(A.Item_Number,B.Item_Number) as Item_Number
+	    ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
 	from
 	    Police_Reports_2017 as A
 	    full join
