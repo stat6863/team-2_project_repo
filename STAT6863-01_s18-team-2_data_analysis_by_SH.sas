@@ -8,7 +8,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 * load external file that will generate final analytic file;
-%include '.\STAT6863-01_s18-team-2_data_preparation';
+%include '.\STAT6863-01_s18-team-2_data_preparation.sas';
 
 
 *******************************************************************************;
@@ -29,26 +29,18 @@ column "InitialTypeText" from each year that has a unique NOPD Item Number.
 Limitations: Values of InitialTypeText that are blank should be 
 excluded from this analysis, since they are potentially missing data values.
 ;
-proc freq
-        data = Calls_for_Service_1617_v2 noprint
-    ;
-    table
-         InitialTypeText / out = Count_InitialTypeText list
-    ;
-        where
-            not(missing(InitialTypeText));
-    ;
-run
 
-proc sort 
-        data = Count_InitialTypeText
-        out = Count_InitialTypeText_Desc
-    ;
-    by
-        descending count
-    ;
- run;
-    
+proc sql;
+select 
+    InitialTypeText
+    ,count(*) as Call_Type_freq
+from
+    Calls_for_Service_1617_v2
+group by
+    InitialTypeText
+order by
+    Call_Type_freq desc;
+quit;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -99,22 +91,14 @@ Limitations: Values of Zip that are blank should be excluded
 from this analysis, since they are potentially missing data values.
 ;
 
-proc freq
-        data = Calls_for_Service_1617_v2 noprint
-    ;
-    table
-        Zip / out = Count_Zip list
-    ;
-        where
-            not(missing(Zip));
-    ;
-run
-
-proc sort 
-        data = Count_Zip
-        out = Count_Zip_Desc
-    ;
-    by
-        descending count
-    ;
- run;
+proc sql;
+select 
+    Zip
+    ,count(*) as Zip_freq
+from
+    Calls_for_Service_1617_v2
+group by
+    Zip
+order by
+    Zip_freq desc;
+quit;
