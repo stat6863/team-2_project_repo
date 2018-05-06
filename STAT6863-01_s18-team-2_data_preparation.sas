@@ -750,6 +750,7 @@ data Police_Reports_1617_v1;
 	;
     by Item_Number;
 run;
+
 proc sort data = Police_Reports_1617_v1;
     by Item_Number;
 run;
