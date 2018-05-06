@@ -766,7 +766,7 @@ proc sql;
     create table Police_Reports_1617_v2 as
 	select
 	    coalesce(A.Item_Number,B.Item_Number) as Item_Number
-		,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
+	    ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
 	from
 	    Police_Reports_2017 as A
 	    full join
