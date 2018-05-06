@@ -343,45 +343,36 @@ being defined as more than one type.;
 data Police_Reports_2017;
     set Police_Reports_2017
     ;
-    num1 = input(Item_Number, best10.)
+    num1 = input(compress(Item_Number,"-"),$10.)
     ;
     num2 = put(Signal_Description, $43.)
-    ;
-    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
         Signal_Description
-        Offender_Age
     ;
     rename 
 	num1 = Item_Number
 	num2 = Signal_Description
-	num3 = Offender_Age
     ;
 run;
 
 data Police_Reports_2016;
     set Police_Reports_2016
     ;
-    num1 = input(Item_Number, $10.)
+    num1 = input(compress(Item_Number,"-"),$10.)
     ;
     num2 = put(Signal_Description, $43.)
-    ;
-    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
         Signal_Description
-        Offender_Age
     ;
     rename 
 	num1 = Item_Number
 	num2 = Signal_Description
-	num3 = Offender_Age
     ;
 run;
-
 
 *inspect columns of interest in cleaned version of datasets;
     /*  
@@ -759,7 +750,6 @@ data Police_Reports_1617_v1;
 	;
     by Item_Number;
 run;
-
 proc sort data = Police_Reports_1617_v1;
     by Item_Number;
 run;
@@ -771,12 +761,12 @@ run;
  seconds of "real time" to execute and about 9522.46k of memory on the computer
  they were tested on. Consequently, the proc sql step appears to be faster to 
  execute as the combined data step and proc sort steps above, but uses more
- memory;
+ memory ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age;
 proc sql;
     create table Police_Reports_1617_v2 as
 	select
 	    coalesce(A.Item_Number,B.Item_Number) as Item_Number
-	    ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
+		,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
 	from
 	    Police_Reports_2017 as A
 	    full join
