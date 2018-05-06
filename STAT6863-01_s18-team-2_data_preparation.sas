@@ -761,7 +761,7 @@ run;
  seconds of "real time" to execute and about 9522.46k of memory on the computer
  they were tested on. Consequently, the proc sql step appears to be faster to 
  execute as the combined data step and proc sort steps above, but uses more
- memory ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age;
+ memory;
 proc sql;
     create table Police_Reports_1617_v2 as
 	select
