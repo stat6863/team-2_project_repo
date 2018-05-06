@@ -18,71 +18,73 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 *
 Question: How does the frequency of crime change over the course of a year?
 
-Rationale: This should help police officers and the public to prepare for 
-certain crimes being committed because of possible weather influences (i.e., 
-the season).
+Rationale: This should help police officers prepare for times of the year which have 
+more crime.
 
 Note: This compares the column "Charge_Description" and 
-"Occured_Date Time" from 2016 and 2017 data sets of Electronic Police Report.
+"Occured_Date Time" from 2016 and 2017 Calls for Service data sets.
 
-Limitations: Values of Charge Description and Occurred Date Time that are 
+Limitations: Values of "Charge Description" and "Occurred Date Time" that are 
 blank should be excluded from this analysis, since they are potentially 
 missing data values.
 ;
 
-PROC SQL;
-	create table ElectronicPoliceReport1617season as
-	SELECT Occurred_Date_Time FROM Police_reports_1617_v2
-	;
-quit;
-
-DATA datemonth;
-	set Police_reports_1617_v2;
+data datemonth;
+	set calls_for_service_2016;
 	dmonth=datepart(Occurred_Date_Time);
 	format dmonth mmddyy10.;
 run;
 
+proc freq data=datemonth noprint;
+   tables dmonth / out=crime_perday;
+run;
 
+goptions ftitle=swiss ftext=swiss;
+symbol v=dot i=sm color=black width=2;
+title height=2 "Frequency of Crime From";
+title2 height=2 "January 1, 2016 and December 31, 2016";
+
+proc gplot data=crime_perday;
+   plot Count * dmonth;
+run;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Can we predict how quickly an officer arrives to a scene after he has 
-been dispatched?
+Question: Can we predict the outcome of a fatality in New Orleans?
 
-Rationale: This would help the public become better educated on how long they can 
-expect to wait for an officer to arrive to a current/potential crime scene.
+Rationale: This would help the police to identify which factors are significant in predicting 
+a fatality in New Orleans.
 
-Note: This compares the columns "TimeDispatch" and "TimeArrive" from 
-Calls_for_Service_2016 and Calls_for_Service_2017 with any other column that is 
-an explanatory variable from all datasets. They can be combined since the variable 
-"NOPD Item" from Calls_for_Service2016/7 matches with the "Item Number" 
-from Electronic_Police_Report_2016/7.
+Note: This compares the column "Victim Fatal Status" with the columns 
+"signal description," "offender race," and "offender gender" from the 
+2016 and 2017 Electronic Police Reports data set.
 
 Limitations: Values of Time Dispatch and Time Arrive, along with any other 
 appropriate column, that are blank should be excluded from this analysis, 
 since they are potentially missing data values.
 ;
 
+proc logistic data=Police_reports_2016;
+	class district signal_description offender_race offender_gender;
+	model victim_fatal_status = district signal_description offender_race offender_gender;
+run; 
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 *
-Question: Is there a correlation between a victim's/offender's race/gender with 
-the type of priority for the call?
+Question: Are certain crimes more prevalent than others?
 
-Rationale: This would help the police to become better aware of who they are 
-dealing with when they get a priority call based on a certain level
+Rationale: This would help police know of any crimes they should most be on the lookout for.
 
-Note: This compares the column "Priority" from Calls_for_Service with the 
-columns "Offender Race," "Offender Gender," "Victim Race," and "Victim Gender" 
-from Electronic_Police_Report.
+Note: This compares the column "Charge Description" from 2016 and 2017 Electronic Police Reports data sets.
 
-Limitations: Values of Priority and Offender Race, Offender Gender, Victim Race, 
-and Victim Gender that are blank should be excluded from this analysis, 
+Limitations: Values of Charge Description that are blank should be excluded from this analysis, 
 since they are potentially missing data values.
 ;
 
-PROC reg data=police
+proc freq data=Police_reports_2016;
+	tables charge_description;
+run;
