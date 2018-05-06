@@ -309,11 +309,11 @@ data Calls_for_Service_2017;
     ;
     num1 = input(NOPD_Item, $10.)
     ;
-    num2 = put(InitalTypeText, $20.)
+    num2 = put(InitialTypeText, $20.)
     ;
     drop 
         NOPD_Item
-        InitalTypeTeext
+        InitialTypeText
     ;
     rename 
         num1 = NOPD_Item
@@ -326,11 +326,11 @@ data Calls_for_Service_2016;
     ;
     num1 = input(NOPD_Item, $10.)
     ;
-    num2 = put(InitalTypeText, $20.)
+    num2 = put(InitialTypeText, $20.)
     ;
     drop 
         NOPD_Item
-        InitalTypeTeext
+        InitialTypeText
     ;
     rename 
         num1 = NOPD_Item
@@ -379,6 +379,7 @@ data Police_Reports_2016;
 	num1 = Item_Number
 	num2 = Signal_Description
 	num3 = Offender_Age
+    ;
 run;
 
 
@@ -681,13 +682,13 @@ run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
-	InitalTypeText
+	InitialTypeText
 	TimeDispatch
 	Zip
 	;
     keep
 	NOPD_Item
-	InitalTypeText
+	InitialTypeText
 	TimeDispatch
 	Zip
 	;
@@ -714,7 +715,7 @@ proc sql;
     create table Calls_for_Service_1617_v2 as
 	select
 	    coalesce(A.NOPD_Item,B.NOPD_Item) as NOPD_Item
-	    ,coalesce(A.InitalTypeText,B.InitalTypeText) as InitalTypeText
+	    ,coalesce(A.InitialTypeText,B.InitialTypeText) as InitialTypeText
 	    ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
 	    ,coalesce(A.Zip,B.Zip) as Zip
 	    
