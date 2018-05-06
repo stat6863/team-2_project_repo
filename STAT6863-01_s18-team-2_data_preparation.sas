@@ -343,45 +343,36 @@ being defined as more than one type.;
 data Police_Reports_2017;
     set Police_Reports_2017
     ;
-    num1 = input(Item_Number, best10.)
+    num1 = input(compress(Item_Number,"-"),$10.)
     ;
     num2 = put(Signal_Description, $43.)
-    ;
-    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
         Signal_Description
-        Offender_Age
     ;
     rename 
 	num1 = Item_Number
 	num2 = Signal_Description
-	num3 = Offender_Age
     ;
 run;
 
 data Police_Reports_2016;
     set Police_Reports_2016
     ;
-    num1 = input(Item_Number, $10.)
+    num1 = input(compress(Item_Number,"-"),$10.)
     ;
     num2 = put(Signal_Description, $43.)
-    ;
-    num3 = input(Offender_Age, best3.)
     ;
     drop 
         Item_Number
         Signal_Description
-        Offender_Age
     ;
     rename 
 	num1 = Item_Number
 	num2 = Signal_Description
-	num3 = Offender_Age
     ;
 run;
-
 
 *inspect columns of interest in cleaned version of datasets;
     /*  
