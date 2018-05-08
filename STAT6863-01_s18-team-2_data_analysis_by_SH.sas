@@ -31,15 +31,15 @@ excluded from this analysis, since they are potentially missing data values.
 ;
 
 proc sql;
-select 
-    InitialTypeText
-    ,count(*) as Call_Type_freq
-from
-    Calls_for_Service_1617_v2
-group by
-    InitialTypeText
-order by
-    Call_Type_freq desc;
+    select 
+        InitialTypeText
+        ,count(*) as Call_Type_freq
+    from
+        Calls_for_Service_1617_v2
+    group by
+        InitialTypeText
+    order by
+        Call_Type_freq desc;
 quit;
 
 *******************************************************************************;
@@ -92,13 +92,13 @@ from this analysis, since they are potentially missing data values.
 ;
 
 proc sql;
-select 
-    Zip
-    ,count(*) as Zip_freq
-from
-    Calls_for_Service_1617_v2
-group by
-    Zip
-order by
-    Zip_freq desc;
+    select 
+        Zip
+        ,count(*) as Zip_freq
+    from
+        Calls_for_Service_1617_v2
+    group by
+        Zip
+    order by
+        Zip_freq desc;
 quit;
