@@ -792,10 +792,10 @@ run;
  key value;
 *note: After running the data step and proc sort step below several times
  and averaging the fullstimer output in the system log, they tend to take
- about 0.39 seconds of combined "real time" to execute and a maximum of
- about 50527.87k of memory (965.78k for the data step vs. 49562.09k for the
+ about 0.45 seconds of combined "real time" to execute and a maximum of
+ about 65564.67k of memory (1041.46k for the data step vs. 64523.21k for the
  proc sort step) on the computer they were tested on;
-
+ 
 data CFS1617_and_PR1617_v1;
     retain
         NOPD_Item
@@ -824,10 +824,10 @@ run;
 *combine Calls_for_Service_1617_v2 and Police_Reports_1617_v2 vertically using
 proc sql;
 *note: After running the proc sql step below several times and averaging
- the fullstimer output in the system log, they tend to take about 0.29
- seconds of "real time" to execute and about 35177.28k of memory on the computer
- they were tested on. Consequently, the proc sql step appears to be faster to 
- execute as the combined data step and proc sort steps above, and uses more
+ the fullstimer output in the system log, they tend to take about 0.27
+ seconds of "real time" to execute and about 50381.31k of memory on the computer
+ they were tested on. Seemingly, the proc sql step appears to be faster to 
+ execute as the combined data step and proc sort steps above, and uses less
  memory;
 
 proc sql;
