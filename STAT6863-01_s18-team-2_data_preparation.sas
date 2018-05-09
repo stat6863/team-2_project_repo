@@ -666,8 +666,8 @@ run;
  a data-step match-merge;
 *note: After running the data step and proc sort step below several times
  and averaging the fullstimer output in the system log, they tend to take
- about 0.76 seconds of combined "real time" to execute and a maximum of
- about 43752.34k of memory (983.25k for the data step vs. 42669.09k for the
+ about 0.82 seconds of combined "real time" to execute and a maximum of
+ about 83056.59k of memory (991.78k for the data step vs. 83056.59k for the
  proc sort step) on the computer they were tested on;
 
 data Calls_for_Service_1617_v1;
@@ -697,11 +697,11 @@ run;
 *combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using 
  proc sql;
 *note: After running the proc sql step below several times and averaging
- the fullstimer output in the system log, they tend to take about 0.49
- seconds of "real time" to execute and about 30650.37k of memory on the computer
- they were tested on. Consequently, the proc sql step appears to be faster to 
- execute as the combined data step and proc sort steps above, and uses less 
- memory;
+ the fullstimer output in the system log, they tend to take about 0.88
+ seconds of "real time" to execute and about 71590.46k of memory on the computer
+ they were tested on. Consequently, the proc sql step appears to be slightly
+ slower to execute as the combined data step and proc sort steps above, but 
+ uses less memory;
 proc sql;
     create table Calls_for_Service_1617_v2 as
 	select
@@ -733,7 +733,7 @@ run;
 *note: After running the data step and proc sort step below several times
  and averaging the fullstimer output in the system log, they tend to take
  about 0.11 seconds of combined "real time" to execute and a maximum of
- about 6941.99k of memory (985.68k for the data step vs. 5956.31k for the
+ about 8359.62kk of memory (985.68k for the data step vs. 8359.62k for the
  proc sort step) on the computer they were tested on;
 data Police_Reports_1617_v1;
     retain
@@ -758,11 +758,11 @@ run;
 *combine Police_Reports_2017 and Police_Reports_2016 horizontally using 
  proc sql;
 *note: After running the proc sql step below several times and averaging
- the fullstimer output in the system log, they tend to take about 0.09
- seconds of "real time" to execute and about 9522.46k of memory on the computer
- they were tested on. Consequently, the proc sql step appears to be faster to 
- execute as the combined data step and proc sort steps above, but uses more
- memory;
+ the fullstimer output in the system log, they tend to take about 0.12
+ seconds of "real time" to execute and about 11317.12k of memory on the computer
+ they were tested on. Consequently, the proc sql step appears to take about the 
+ same time to execute as the combined data step and proc sort steps above, but 
+ uses more memory;
 proc sql;
     create table Police_Reports_1617_v2 as
 	select
@@ -793,7 +793,7 @@ run;
 *note: After running the data step and proc sort step below several times
  and averaging the fullstimer output in the system log, they tend to take
  about 0.45 seconds of combined "real time" to execute and a maximum of
- about 65564.67k of memory (1041.46k for the data step vs. 64523.21k for the
+ about 64523.21k of memory (1041.46k for the data step vs. 64523.21k for the
  proc sort step) on the computer they were tested on;
  
 data CFS1617_and_PR1617_v1;
@@ -824,7 +824,7 @@ run;
 *combine Calls_for_Service_1617_v2 and Police_Reports_1617_v2 vertically using
 proc sql;
 *note: After running the proc sql step below several times and averaging
- the fullstimer output in the system log, they tend to take about 0.27
+ the fullstimer output in the system log, they tend to take about 0.32
  seconds of "real time" to execute and about 50381.31k of memory on the computer
  they were tested on. Seemingly, the proc sql step appears to be faster to 
  execute as the combined data step and proc sort steps above, and uses less
