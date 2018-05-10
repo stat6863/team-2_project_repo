@@ -40,9 +40,9 @@ proc sql;
     ;
 quit;
 data weekday;
-  set CallsForService1617Day;
-  Weekday=datepart(TimeDispatch);
-  format Weekday weekdate3.;
+    set CallsForService1617Day;
+    Weekday=datepart(TimeDispatch);
+    format Weekday weekdate3.;
 run;
 proc freq  
     order=freq
@@ -101,12 +101,16 @@ proc sql;
     from 
         (
         select 
-        Item_Number
-        ,District from Police_Reports_2016
+            Item_Number
+            ,District 
+        from 
+            Police_Reports_2016
         union
         select 
-        Item_Number
-        ,District from Police_Reports_2017
+            Item_Number
+            ,District 
+        from 
+            Police_Reports_2017
         )
     group by District
     order by Total desc
