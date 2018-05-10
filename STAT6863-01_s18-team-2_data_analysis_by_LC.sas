@@ -32,12 +32,12 @@ convert the numbers into names
 ;
 
 proc sql;
-	create table CallsForService1617Day as
-		select 
-			TimeDispatch 
-		from 
-			Calls_for_Service_1617_v2
-	;
+    create table CallsForService1617Day as
+        select 
+            TimeDispatch 
+        from 
+            Calls_for_Service_1617_v2
+    ;
 quit;
 data weekday;
   set CallsForService1617Day;
@@ -45,9 +45,9 @@ data weekday;
   format Weekday weekdate3.;
 run;
 proc freq  
-	order=freq
-	data = weekday;
-	tables weekday / norow nocum out=counts;
+    order=freq
+    data = weekday;
+    tables weekday / norow nocum out=counts;
 run;
 
 *******************************************************************************;
@@ -68,12 +68,12 @@ Electronic_Police_Report_2016 and Electronic_Police_Report_2017 that are blank
 should be excluded. 
 ;
 
- proc sql;
-	select 
-		mean(Offender_Age) as MeanOffenderAge
-	from 
-		Police_Reports_1617_v2
-	;
+proc sql;
+    select 
+        mean(Offender_Age) as MeanOffenderAge
+    from 
+        Police_Reports_1617_v2
+    ;
 quit;
 
 *******************************************************************************;
@@ -94,21 +94,21 @@ missing data. Rows with missing Signal Description values should be excluded
 because they are missing data. 
 ;
 
- proc sql;
-		select 
-			District
-			,count(Item_Number) as Total
-		from 
-			(
-			select 
-				Item_Number
-				,District from Police_Reports_2016
-			union
-			select 
-				Item_Number
-				,District from Police_Reports_2017
-			)
-		group by District
-		order by Total desc
-	;
+proc sql;
+    select 
+        District
+        ,count(Item_Number) as Total
+    from 
+        (
+        select 
+        Item_Number
+        ,District from Police_Reports_2016
+        union
+        select 
+        Item_Number
+        ,District from Police_Reports_2017
+        )
+    group by District
+    order by Total desc
+    ;
 quit;
