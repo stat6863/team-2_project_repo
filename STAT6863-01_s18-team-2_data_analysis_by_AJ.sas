@@ -20,12 +20,11 @@ Question: How does the frequency of crime change over the course of a year?
 Rationale: This should help police officers prepare for times of the year which 
 have more crime.
 
-Note: This compares the column "Type Text" and 
-"Time Create" from 2016 and 2017 Calls for Service data sets.
+Note: This compares the column "Time Create" and "Type Text" from 2016 and 2017 
+Calls for Service data sets.
 
-Limitations: Values of "Charge Description" and "Occurred Date Time" that are 
-blank should be excluded from this analysis, since they are potentially 
-missing data values.
+Limitations: Values of "Type Text" and "Time Create" that are blank should be 
+excluded from this analysis, since they are potentially missing data values.
 ;
 
 data new_callsforservice_16;
@@ -61,7 +60,7 @@ Note: This compares the column "Victim Fatal Status" with the columns
 the 2016 and 2017 Electronic Police Reports data set.
 
 Limitations: Values of "Victim Fatal Status," "Signal Description," 
-"District," "Offender Race," and "offender Gender" that are blank should be 
+"District," "Offender Race," and "Offender Gender" that are blank should be 
 excluded from this analysis, since they are potentially missing data values.
 ;
 
