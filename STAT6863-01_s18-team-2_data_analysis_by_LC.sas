@@ -70,7 +70,8 @@ should be excluded.
 
 proc sql;
     select 
-        mean(Offender_Age) as MeanOffenderAge
+        mean(Offender_Age)
+        as MeanOffenderAge
     from 
         Police_Reports_1617_v2
     ;
@@ -97,7 +98,8 @@ because they are missing data.
 proc sql;
     select 
         District
-        ,count(Item_Number) as Total
+        ,count(Item_Number) 
+        as Total
     from 
         (
         select 
