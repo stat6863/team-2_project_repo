@@ -924,16 +924,14 @@ quit;
 missing, or correspond to non-schools, where the column CDS_Code is intended
 to be a primary key;
 
-data cde_analytic_file_raw_bad_ids;
-    set cde_analytic_file_raw;
-    by CDS_Code;
+data nopd_analytic_file_raw_bad_ids;
+    set nopd_analytic_file_raw;
+    by NOPD_Item;
 
     if
         first.NOPD_Item*last.NOPD_Item = 0
         or
         missing(NOPD_Item)
-        or
-        substr(NOPD_Item,8,7) in ("0000000","0000001")
     then
         do;
             output;
@@ -944,8 +942,8 @@ run;
 
 proc sort
         nodupkey
-        data=cde_analytic_file_raw
-        out=cde_analytic_file
+        data=nopd_analytic_file_raw
+        out=nopd_analytic_file
     ;
     by
         NOPD_Item

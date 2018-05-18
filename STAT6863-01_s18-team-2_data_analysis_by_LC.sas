@@ -36,10 +36,12 @@ proc sql;
         select 
             TimeDispatch 
         from 
-            Calls_for_Service_1617_v2
+            nopd_analytic_file
+		where
+			TimeDispatch is not null
     ;
 quit;
-data weekday;
+data weekday;	
     set CallsForService1617Day;
     Weekday=datepart(TimeDispatch);
     format Weekday weekdate3.;
@@ -70,10 +72,9 @@ should be excluded.
 
 proc sql;
     select 
-        mean(Offender_Age)
-        as MeanOffenderAge
+        mean(Offender_Age) as MeanOffenderAge
     from 
-        Police_Reports_1617_v2
+        nopd_analytic_file
     ;
 quit;
 
@@ -98,8 +99,7 @@ because they are missing data.
 proc sql;
     select 
         District
-        ,count(Item_Number) 
-        as Total
+        ,count(Item_Number) as Total
     from 
         (
         select 
