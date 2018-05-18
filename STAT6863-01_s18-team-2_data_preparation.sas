@@ -661,7 +661,7 @@ run;
     title;
     */
 
-
+/*
 *combine Calls_for_Service_2017 and Calls_for_Service_2016 horizontally using
  a data-step match-merge;
 *note: After running the data step and proc sort step below several times
@@ -856,5 +856,96 @@ proc compare
         base = CFS1617_and_PR1617_v1
         compare = CFS1617_and_PR1617_v2
         novalues
+    ;
+run;
+*/
+* build analytic dataset from raw datasets imported above, including only the
+columns and minimal data-cleaning/transformation needed to address each
+research questions/objectives in data-analysis files;
+proc sql;
+	create table nopd_analytic_file_raw as
+		select
+		     coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
+		     AS NOPD_Item
+			,coalesce(A.InitialTypeText,B.InitialTypeText) As InitialTypeText
+			,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch
+			,coalesce(A.Zip,B.Zip) As Zip
+			,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
+			,coalesce(C.District,D.District) As District
+		    from
+		        (
+		            select
+		                 NOPD_Item
+		                ,InitialTypeText
+		                ,TimeDispatch
+						,Zip
+		            from
+		                Calls_for_service_2016
+		        ) as A
+		        full join
+		        (
+		            select
+		                 NOPD_Item
+		                ,InitialTypeText
+		                ,TimeDispatch
+						,Zip
+		            from
+		                Calls_for_service_2017
+		        ) as B
+		        on A.NOPD_Item = B.NOPD_Item
+		        full join
+		        (
+		            select
+		                 Item_Number
+		                 AS NOPD_Item
+		                ,District
+		                ,Offender_Age
+		            from
+		                Police_reports_2016
+		        ) as C
+		        on A.NOPD_Item = C.NOPD_Item
+		        full join
+		        (
+		            select
+		                 Item_Number
+		                 AS NOPD_Item
+		                ,District
+		                ,Offender_Age
+		            from
+		                Police_reports_2017
+		        ) as D
+		        on B.NOPD_Item = D.NOPD_Item
+		order by
+			NOPD_Item
+		;
+quit;
+
+* check cde_analytic_file_raw for rows whose unique id values are repeated,
+missing, or correspond to non-schools, where the column CDS_Code is intended
+to be a primary key;
+
+data nopd_analytic_file_raw_bad_ids;
+    set nopd_analytic_file_raw;
+    by NOPD_Item;
+
+    if
+        first.NOPD_Item*last.NOPD_Item = 0
+        or
+        missing(NOPD_Item)
+    then
+        do;
+            output;
+        end;
+run;
+
+* remove duplicates from cde_analytic_file_raw with respect to CDS_Code;
+
+proc sort
+        nodupkey
+        data=nopd_analytic_file_raw
+        out=nopd_analytic_file
+    ;
+    by
+        NOPD_Item
     ;
 run;

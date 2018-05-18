@@ -36,10 +36,12 @@ proc sql;
         select 
             TimeDispatch 
         from 
-            Calls_for_Service_1617_v2
+            nopd_analytic_file
+		where
+			TimeDispatch is not null
     ;
 quit;
-data weekday;
+data weekday;	
     set CallsForService1617Day;
     Weekday=datepart(TimeDispatch);
     format Weekday weekdate3.;
@@ -72,7 +74,7 @@ proc sql;
     select 
         mean(Offender_Age) as MeanOffenderAge
     from 
-        Police_Reports_1617_v2
+        nopd_analytic_file
     ;
 quit;
 
