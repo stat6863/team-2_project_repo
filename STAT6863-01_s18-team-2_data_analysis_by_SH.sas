@@ -35,7 +35,7 @@ proc sql;
         InitialTypeText
         ,count(*) as Call_Type_freq
     from
-        Calls_for_Service_1617_v2
+        nopd_analytic_file_raw
     group by
         InitialTypeText
     order by
@@ -68,7 +68,7 @@ proc sql;
         ,median(Offender_Age) as median
         ,nmiss(Offender_Age)as missing
     from
-	Police_Reports_1617_v2
+	nopd_analytic_file_raw
     ;
 quit;
    
@@ -96,7 +96,7 @@ proc sql;
         Zip
         ,count(*) as Zip_freq
     from
-        Calls_for_Service_1617_v2
+        nopd_analytic_file_raw
     group by
         Zip
     order by
