@@ -865,59 +865,59 @@ research questions/objectives in data-analysis files;
 proc sql;
     create table nopd_analytic_file_raw as
         select
-             coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
-             AS NOPD_Item
+            coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
+            AS NOPD_Item
             ,coalesce(A.InitialTypeText,B.InitialTypeText) As InitialTypeText
             ,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch
             ,coalesce(A.Zip,B.Zip) As Zip
             ,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
             ,coalesce(C.District,D.District) As District
-            from
-                (
-                    select
-                         NOPD_Item
-                        ,InitialTypeText
-                        ,TimeDispatch
-                        ,Zip
-                    from
-                        Calls_for_service_2016
-                ) as A
-                full join
-                (
-                    select
-                         NOPD_Item
-                        ,InitialTypeText
-                        ,TimeDispatch
-                        ,Zip
-                    from
-                        Calls_for_service_2017
-                ) as B
-                on A.NOPD_Item = B.NOPD_Item
-                full join
-                (
-                    select
-                         Item_Number
-                         AS NOPD_Item
-                        ,District
-                        ,Offender_Age
-                    from
-                        Police_reports_2016
-                ) as C
-                on A.NOPD_Item = C.NOPD_Item
-                full join
-                (
-                    select
-                         Item_Number
-                         AS NOPD_Item
-                        ,District
-                        ,Offender_Age
-                    from
-                        Police_reports_2017
-                ) as D
-                on B.NOPD_Item = D.NOPD_Item
-        order by
-            NOPD_Item
-        ;
+        from
+            (
+                select
+                    NOPD_Item
+                    ,InitialTypeText
+                    ,TimeDispatch
+                    ,Zip
+                from
+                    Calls_for_service_2016
+            ) as A
+            full join
+            (
+                select
+                    NOPD_Item
+                    ,InitialTypeText
+                    ,TimeDispatch
+                    ,Zip
+                from
+                    Calls_for_service_2017
+            ) as B
+            on A.NOPD_Item = B.NOPD_Item
+            full join
+            (
+                select
+                    Item_Number
+                    AS NOPD_Item
+                    ,District
+                    ,Offender_Age
+                from
+                    Police_reports_2016
+            ) as C
+            on A.NOPD_Item = C.NOPD_Item
+            full join
+            (
+                select
+                    Item_Number
+                    AS NOPD_Item
+                    ,District
+                    ,Offender_Age
+                from
+                    Police_reports_2017
+            ) as D
+            on B.NOPD_Item = D.NOPD_Item
+    order by
+        NOPD_Item
+    ;
 quit;
 
 * check cde_analytic_file_raw for rows whose unique id values are repeated,
