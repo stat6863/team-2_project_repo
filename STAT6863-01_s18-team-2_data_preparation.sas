@@ -881,8 +881,8 @@ proc sql;
 		    ,Zip
 		from
 		    Calls_for_service_2016
-	) as A
-	full join
+        ) as A
+        full join
 	(
 	    select
 	        NOPD_Item
@@ -891,9 +891,9 @@ proc sql;
 		,Zip
 	    from
 		Calls_for_service_2017
-	 ) as B
-	 on A.NOPD_Item = B.NOPD_Item
-	full join
+        ) as B
+	on A.NOPD_Item = B.NOPD_Item
+        full join
 	(
 	    select
 		Item_Number
@@ -902,7 +902,7 @@ proc sql;
 		,Offender_Age
 	    from
 		Police_reports_2016
-	) as C
+        ) as C
 	on A.NOPD_Item = C.NOPD_Item
 	full join
 	(
