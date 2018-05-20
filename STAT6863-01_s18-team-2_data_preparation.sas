@@ -739,10 +739,20 @@ data Police_Reports_1617_v1;
     retain
         Item_Number
 	Offender_Age
+	Victim_Fatal_Status
+	Signal_Description
+	District
+	Offender_Race
+	Offender_Gender
 	;
     keep
 	Item_Number
 	Offender_Age
+	Victim_Fatal_Status
+	Signal_Description
+	District
+	Offender_Race
+	Offender_Gender
 	;
     merge
         Police_Reports_2017
@@ -768,6 +778,10 @@ proc sql;
 	select
 	    coalesce(A.Item_Number,B.Item_Number) as Item_Number
 	    ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
+		,coalesce(A.Victim_Fatal_Status,B.Victim_Fatal_Status) as Victim_Fatal_Status
+		,coalesce(A.District,B.District) as District
+		,coalesce(A.Offender_Race,B.Offender_Race) as Offender_Race
+		,coalesce(A.Offender_Gender,B
 	from
 	    Police_Reports_2017 as A
 	    full join
@@ -868,10 +882,14 @@ proc sql;
             coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
 	    AS NOPD_Item
 	    ,coalesce(A.InitialTypeText,B.InitialTypeText) As InitialTypeText
-	    ,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch
+	    ,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch format datetime16.
 	    ,coalesce(A.Zip,B.Zip) As Zip
 	    ,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
 	    ,coalesce(C.District,D.District) As District
+		,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) As Victim_Fatal_Status
+		,coalesce(C.Signal_Description,D.Signal_Description) As Signal_Description
+		,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
+		,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
 	from
 	    (
 	        select
@@ -900,6 +918,10 @@ proc sql;
 		AS NOPD_Item
 		,District
 		,Offender_Age
+		,Victim_Fatal_Status
+		,Signal_Description
+		,Offender_Race
+		,Offender_Gender
 	    from
 		Police_reports_2016
         ) as C
@@ -911,6 +933,10 @@ proc sql;
 		AS NOPD_Item
 		,District
 		,Offender_Age
+		,Victim_Fatal_Status
+		,Signal_Description
+		,Offender_Race
+		,Offender_Gender
 	    from
 	        Police_reports_2017
 	) as D
