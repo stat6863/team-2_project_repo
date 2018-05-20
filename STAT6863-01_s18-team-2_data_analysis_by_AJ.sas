@@ -20,30 +20,26 @@ Question: How does the frequency of crime change over the course of a year?
 Rationale: This should help police officers prepare for times of the year which 
 have more crime.
 
-Note: This compares the column "Time Create" and "Type Text" from 2016 and 2017 
+Note: This compares the column "Time Dispatch" and "Initial Type Text" from 2016 and 2017 
 Calls for Service data sets.
 
 Limitations: Values of "Type Text" and "Time Create" that are blank should be 
 excluded from this analysis, since they are potentially missing data values.
 ;
 
-data new_callsforservice_16;
-	set calls_for_service_2016;
-	dmonth=datepart(TimeCreate);
+data adams_nopd_analytic_file;
+	set nopd_analytic_file;
+	dmonth=datepart(TimeDispatch);
 	format dmonth mmddyy10.;
 run;
 
-proc freq data=new_callsforservice_16 noprint;
+proc freq data=adams_nopd_analytic_file noprint;
 	tables dmonth / out=crime_perday;
 run;
 
-goptions ftitle=swiss ftext=swiss;
-symbol v=dot i=sm color=black width=1;
-title height=2 "Frequency of Crime From";
-title2 height=2 "January 1, 2016 and December 31, 2016";
-
+title "Frequency of Police Dispatches in New Orleans";
 proc gplot data=crime_perday;
-	plot count * dmonth;
+	plot count * dmonth / vaxis=500 to 1000 by 10;
 run;
 
 ******************************************************************************;
@@ -71,7 +67,7 @@ excluded from this analysis, since they are potentially missing data values.
 %let pred3 = offender_race;
 %let pred4 = offender_gender;
 
-proc logistic data=Police_reports_2016;
+proc logistic data=nopd_analytic_file;
 	class &y &pred1 &pred2 &pred3 &pred4;
 	model &y = &pred1 &pred2 &pred3 &pred4;
 run; 
@@ -94,6 +90,6 @@ should be excluded from this analysis, since they are potentially missing data
 values.
 ;
 
-proc freq data=Police_reports_2016;
-	tables charge_description * offender_race;
+proc freq data=nopd_analytic_file;
+	tables charge_description * offender_race / chisq;
 run;
