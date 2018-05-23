@@ -920,8 +920,8 @@ proc sql;
     ;
 quit;
 
-* check cde_analytic_file_raw for rows whose unique id values are repeated,
-missing, or correspond to non-schools, where the column CDS_Code is intended
+* check nopd_analytic_file_raw for rows whose unique id values are repeated,
+missing, or correspond to non crimes, where the column NOPD_Item is intended
 to be a primary key;
 
 data nopd_analytic_file_raw_bad_ids;
@@ -938,8 +938,7 @@ data nopd_analytic_file_raw_bad_ids;
         end;
 run;
 
-* remove duplicates from cde_analytic_file_raw with respect to CDS_Code;
-
+* remove duplicates from nopd_analytic_file_raw with respect to NOPD_Item;
 proc sort
         nodupkey
         data=nopd_analytic_file_raw
