@@ -165,16 +165,16 @@ proc sql;
        see that Calls_for_Service_2017 contains no rows, so no mitigation is
        needed to ensure uniqueness */
     create table Calls_for_Service_2017_dups as
-	select
+    select
             NOPD_Item
-	    ,count(*) as row_count_for_unique_id_values
+        ,count(*) as row_count_for_unique_id_values
         from 
-	    Calls_for_Service_2017_raw
-	group by
-	    NOPD_Item
-	having
+        Calls_for_Service_2017_raw
+    group by
+        NOPD_Item
+    having
             row_count_for_unique_id_values > 1
-	;
+    ;
 quit;
 
 *removes rows with missing and duplicate unique id components, after 
@@ -203,16 +203,16 @@ proc sql;
        which we can mitigate as part of eliminating rows having duplicate unique 
        id component*/
     create table Calls_for_Service_2016_dups as
-	select
+    select
             NOPD_Item
-	    ,count(*) as row_count_for_unique_id_values
+        ,count(*) as row_count_for_unique_id_values
         from 
-	    Calls_for_Service_2016_raw
-	group by
-	    NOPD_Item
-	having
-	    row_count_for_unique_id_values > 1
-	;
+        Calls_for_Service_2016_raw
+    group by
+        NOPD_Item
+    having
+        row_count_for_unique_id_values > 1
+    ;
 quit;
 *removes rows with missing and duplicate unique id components, after 
  executing this query, the new dataset Calls_for_Service_2016 will have no 
@@ -239,12 +239,12 @@ proc sql;
        id component*/
     create table Police_Reports_2017_dups as
     select
-	Item_Number
-	,count(*) as row_count_for_unique_id_values
+    Item_Number
+    ,count(*) as row_count_for_unique_id_values
     from 
-	Police_Reports_2017_raw
+    Police_Reports_2017_raw
     group by
-	Item_Number
+    Item_Number
     having
         row_count_for_unique_id_values > 1
     ;
@@ -275,15 +275,15 @@ proc sql;
        id component*/
     create table Police_Reports_2016_dups as
         select
-	    Item_Number
-	    ,count(*) as row_count_for_unique_id_values
+        Item_Number
+        ,count(*) as row_count_for_unique_id_values
         from 
-	    Police_Reports_2016_raw
-	group by
-	    Item_Number
-	having
-	    row_count_for_unique_id_values > 1
-	;
+        Police_Reports_2016_raw
+    group by
+        Item_Number
+    having
+        row_count_for_unique_id_values > 1
+    ;
 quit;
 *removes rows with missing and duplicate unique id components, after 
  executing this query, the new dataset Police_Reports_2016 will have no 
@@ -352,8 +352,8 @@ data Police_Reports_2017;
         Signal_Description
     ;
     rename 
-	num1 = Item_Number
-	num2 = Signal_Description
+    num1 = Item_Number
+    num2 = Signal_Description
     ;
 run;
 
@@ -369,8 +369,8 @@ data Police_Reports_2016;
         Signal_Description
     ;
     rename 
-	num1 = Item_Number
-	num2 = Signal_Description
+    num1 = Item_Number
+    num2 = Signal_Description
     ;
 run;
 
@@ -379,28 +379,28 @@ run;
     title "Zip in Calls_for_Service_2017";
     proc sql;
         select
-	    min(Zip) as min
+        min(Zip) as min
             ,max(Zip) as max
             ,mean(Zip) as mean
             ,median(Zip) as median
             ,nmiss(Zip)as missing
         from
-	    Calls_for_Service_2017
-	;
+        Calls_for_Service_2017
+    ;
     quit;
     title;
 
     title "Zip in Calls_for_Service_2016";
     proc sql;
         select
-	    min(Zip) as min
+        min(Zip) as min
             ,max(Zip) as max
             ,mean(Zip) as mean
             ,median(Zip) as median
             ,nmiss(Zip)as missing
         from
-	    Calls_for_Service_2016
-	;
+        Calls_for_Service_2016
+    ;
     quit;
     title;
 
@@ -409,8 +409,8 @@ run;
         select
             nmiss(InitialTypeText)as missing
         from
-	    Calls_for_Service_2017
-	;
+        Calls_for_Service_2017
+    ;
     quit;
     title;
 
@@ -419,8 +419,8 @@ run;
         select
             nmiss(InitialTypeText)as missing
         from
-	    Calls_for_Service_2016
-	;
+        Calls_for_Service_2016
+    ;
     quit;
     title;
 
@@ -429,8 +429,8 @@ run;
         select
             nmiss(TimeDispatch)as missing
         from
-	    Calls_for_Service_2017
-	;
+        Calls_for_Service_2017
+    ;
     quit;
     title;
 
@@ -439,8 +439,8 @@ run;
         select
             nmiss(TimeDispatch)as missing
         from
-	    Calls_for_Service_2016
-	;
+        Calls_for_Service_2016
+    ;
     quit;
     title;
 
@@ -449,8 +449,8 @@ run;
         select
             nmiss(TimeArrive)as missing
         from
-	    Calls_for_Service_2017
-	;
+        Calls_for_Service_2017
+    ;
     quit;
     title;
 
@@ -459,8 +459,8 @@ run;
         select
             nmiss(TimeArrive)as missing
         from
-	    Calls_for_Service_2016
-	;
+        Calls_for_Service_2016
+    ;
     quit;
     title;
 
@@ -469,8 +469,8 @@ run;
         select
             nmiss(Priority)as missing
         from
-	    Calls_for_Service_2017
-	;
+        Calls_for_Service_2017
+    ;
     quit;
     title;
 
@@ -479,64 +479,64 @@ run;
         select
             nmiss(Priority)as missing
         from
-	    Calls_for_Service_2016
-	;
+        Calls_for_Service_2016
+    ;
     quit;
     title;
 
     title "Offender Age in Police_Reports_2017";
     proc sql;
         select
-	    min(Offender_Age) as min
+        min(Offender_Age) as min
             ,max(Offender_Age) as max
             ,mean(Offender_Age) as mean
             ,median(Offender_Age) as median
             ,nmiss(Offender_Age)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
     title "Offender Age in Police_Reports_2016";
     proc sql;
         select
-	    min(Offender_Age) as min
+        min(Offender_Age) as min
             ,max(Offender_Age) as max
             ,mean(Offender_Age) as mean
             ,median(Offender_Age) as median
             ,nmiss(Offender_Age)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
     title "District in Police_Reports_2017";
     proc sql;
         select
-	    min(District) as min
+        min(District) as min
             ,max(District) as max
             ,mean(District) as mean
             ,median(District) as median
             ,nmiss(District)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
     title "District in Police_Reports_2016";
     proc sql;
         select
-	    min(District) as min
+        min(District) as min
             ,max(District) as max
             ,mean(District) as mean
             ,median(District) as median
             ,nmiss(District)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
@@ -545,8 +545,8 @@ run;
         select
             nmiss(Charge_Description)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
@@ -555,8 +555,8 @@ run;
         select
             nmiss(Charge_Description)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
@@ -565,8 +565,8 @@ run;
         select
             nmiss(Occured_Date_Time)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
@@ -575,8 +575,8 @@ run;
         select
             nmiss(Occured_Date_Time)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
@@ -585,8 +585,8 @@ run;
         select
             nmiss(Offender_Race)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
@@ -595,8 +595,8 @@ run;
         select
             nmiss(Offender_Race)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
@@ -605,8 +605,8 @@ run;
         select
             nmiss(Offender_Gender)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
@@ -615,8 +615,8 @@ run;
         select
             nmiss(Offender_Gender)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
@@ -625,8 +625,8 @@ run;
         select
             nmiss(Victim_Gender)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
@@ -635,8 +635,8 @@ run;
         select
             nmiss(Victim_Gender)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
 
@@ -645,8 +645,8 @@ run;
         select
             nmiss(Victim_Race)as missing
         from
-	    Police_Reports_2017
-	;
+        Police_Reports_2017
+    ;
     quit;
     title;
 
@@ -655,8 +655,8 @@ run;
         select
             nmiss(Victim_Race)as missing
         from
-	    Police_Reports_2016
-	;
+        Police_Reports_2016
+    ;
     quit;
     title;
     */
@@ -673,20 +673,20 @@ run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
-	InitialTypeText
-	TimeDispatch
-	Zip
-	;
+    InitialTypeText
+    TimeDispatch
+    Zip
+    ;
     keep
-	NOPD_Item
-	InitialTypeText
-	TimeDispatch
-	Zip
-	;
+    NOPD_Item
+    InitialTypeText
+    TimeDispatch
+    Zip
+    ;
     merge
         Calls_for_Service_2017
         Calls_for_Service_2016
-	;
+    ;
     by NOPD_Item;
 run;
 
@@ -704,20 +704,20 @@ run;
  uses less memory;
 proc sql;
     create table Calls_for_Service_1617_v2 as
-	select
-	    coalesce(A.NOPD_Item,B.NOPD_Item) as NOPD_Item
-	    ,coalesce(A.InitialTypeText,B.InitialTypeText) as InitialTypeText
-	    ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
-	    ,coalesce(A.Zip,B.Zip) as Zip
-	    
-	from
-	    Calls_for_Service_2017 as A
-	    full join
-	    Calls_for_Service_2016 as B
-	    on A.NOPD_Item = B.NOPD_Item
-	order by
+    select
+        coalesce(A.NOPD_Item,B.NOPD_Item) as NOPD_Item
+        ,coalesce(A.InitialTypeText,B.InitialTypeText) as InitialTypeText
+        ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
+        ,coalesce(A.Zip,B.Zip) as Zip
+        
+    from
+        Calls_for_Service_2017 as A
+        full join
+        Calls_for_Service_2016 as B
+        on A.NOPD_Item = B.NOPD_Item
+    order by
             NOPD_Item
-	;
+    ;
 quit;
 
 *verify that Calls_for_Service_1617_v1 and Calls_for_Service_1617_v2 are identical;
@@ -738,26 +738,26 @@ run;
 data Police_Reports_1617_v1;
     retain
         Item_Number
-	Offender_Age
-	Victim_Fatal_Status
-	Signal_Description
-	District
-	Offender_Race
-	Offender_Gender
-	;
+        Offender_Age
+        Victim_Fatal_Status
+        Signal_Description
+        District
+        Offender_Race
+        Offender_Gender
+    ;
     keep
-	Item_Number
-	Offender_Age
-	Victim_Fatal_Status
-	Signal_Description
-	District
-	Offender_Race
-	Offender_Gender
-	;
+        Item_Number
+        Offender_Age
+        Victim_Fatal_Status
+        Signal_Description
+        District
+        Offender_Race
+        Offender_Gender
+    ;
     merge
         Police_Reports_2017
         Police_Reports_2016
-	;
+    ;
     by Item_Number;
 run;
 
@@ -775,21 +775,24 @@ run;
  uses more memory;
 proc sql;
     create table Police_Reports_1617_v2 as
-	select
-	    coalesce(A.Item_Number,B.Item_Number) as Item_Number
-	    ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
-		,coalesce(A.Victim_Fatal_Status,B.Victim_Fatal_Status) as Victim_Fatal_Status
-		,coalesce(A.District,B.District) as District
-		,coalesce(A.Offender_Race,B.Offender_Race) as Offender_Race
-		,coalesce(A.Offender_Gender,B
-	from
-	    Police_Reports_2017 as A
-	    full join
-	    Police_Reports_2016 as B
-	    on A.Item_Number = B.Item_Number
-	order by
+        select
+            coalesce(A.Item_Number,B.Item_Number) as Item_Number
+            ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
+            ,coalesce(A.Victim_Fatal_Status,B.Victim_Fatal_Status) 
+            as Victim_Fatal_Status
+            ,coalesce(A.Signal_Description,B.Signal_Description) 
+            as Signal_Description
+		        ,coalesce(A.District,B.District) as District
+		        ,coalesce(A.Offender_Race,B.Offender_Race) as Offender_Race
+		        ,coalesce(A.Offender_Gender,B.Offender_Gender) as Offender_Gender
+        from
+            Police_Reports_2017 as A
+            full join
+            Police_Reports_2016 as B
+            on A.Item_Number = B.Item_Number
+        order by
             Item_Number
-	;
+    ;
 quit;
 
 *verify that Police_Reports_1617_v1 and Police_Reports_v2 are identical;
@@ -880,74 +883,76 @@ proc sql;
     create table nopd_analytic_file_raw as
         select
             coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
-	    AS NOPD_Item
-	    ,coalesce(A.InitialTypeText,B.InitialTypeText) As InitialTypeText
-	    ,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch format datetime16.
-	    ,coalesce(A.Zip,B.Zip) As Zip
-	    ,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
-	    ,coalesce(C.District,D.District) As District
-		,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) As Victim_Fatal_Status
-		,coalesce(C.Signal_Description,D.Signal_Description) As Signal_Description
-		,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
-		,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
-	from
-	    (
-	        select
-	            NOPD_Item
-		    ,InitialTypeText
-	            ,TimeDispatch
-		    ,Zip
-		from
-		    Calls_for_service_2016
-        ) as A
-        full join
-	(
-	    select
-	        NOPD_Item
-		,InitialTypeText
-		,TimeDispatch
-		,Zip
-	    from
-		Calls_for_service_2017
-        ) as B
-	on A.NOPD_Item = B.NOPD_Item
-        full join
-	(
-	    select
-		Item_Number
-		AS NOPD_Item
-		,District
-		,Offender_Age
-		,Victim_Fatal_Status
-		,Signal_Description
-		,Offender_Race
-		,Offender_Gender
-	    from
-		Police_reports_2016
-        ) as C
-	on A.NOPD_Item = C.NOPD_Item
-	full join
-	(
-	    select
-		Item_Number
-		AS NOPD_Item
-		,District
-		,Offender_Age
-		,Victim_Fatal_Status
-		,Signal_Description
-		,Offender_Race
-		,Offender_Gender
-	    from
-	        Police_reports_2017
-	) as D
-	on B.NOPD_Item = D.NOPD_Item
+            AS NOPD_Item
+            ,coalesce(A.InitialTypeText,B.InitialTypeText) As InitialTypeText
+            ,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch
+            ,coalesce(A.Zip,B.Zip) As Zip
+            ,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
+            ,coalesce(C.District,D.District) As District
+            ,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) 
+            As Victim_Fatal_Status
+		        ,coalesce(C.Signal_Description,D.Signal_Description) 
+            As Signal_Description
+		        ,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
+		        ,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
+        from
+            (
+                select
+                    NOPD_Item
+                    ,InitialTypeText
+                    ,TimeDispatch
+                    ,Zip
+                from
+                    Calls_for_service_2016
+            ) as A
+            full join
+            (
+                select
+                    NOPD_Item
+                    ,InitialTypeText
+                    ,TimeDispatch
+                    ,Zip
+                from
+                    Calls_for_service_2017
+            ) as B
+            on A.NOPD_Item = B.NOPD_Item
+            full join
+            (
+                select
+                    Item_Number
+                    AS NOPD_Item
+                    ,District
+                    ,Offender_Age
+                    ,Victim_Fatal_Status
+                    ,Signal_Description
+                    ,Offender_Race
+                    ,Offender_Gender
+                from
+                    Police_reports_2016
+            ) as C
+            on A.NOPD_Item = C.NOPD_Item
+            full join
+            (
+                select
+                    Item_Number
+                    AS NOPD_Item
+                    ,District
+                    ,Offender_Age
+                    ,Victim_Fatal_Status
+                    ,Signal_Description
+                    ,Offender_Race
+                    ,Offender_Gender
+                from
+                    Police_reports_2017
+            ) as D
+            on B.NOPD_Item = D.NOPD_Item
     order by
         NOPD_Item
     ;
 quit;
 
-* check cde_analytic_file_raw for rows whose unique id values are repeated,
-missing, or correspond to non-schools, where the column CDS_Code is intended
+* check nopd_analytic_file_raw for rows whose unique id values are repeated,
+missing, or correspond to non crimes, where the column NOPD_Item is intended
 to be a primary key;
 
 data nopd_analytic_file_raw_bad_ids;
@@ -964,8 +969,7 @@ data nopd_analytic_file_raw_bad_ids;
         end;
 run;
 
-* remove duplicates from cde_analytic_file_raw with respect to CDS_Code;
-
+* remove duplicates from nopd_analytic_file_raw with respect to NOPD_Item;
 proc sort
         nodupkey
         data=nopd_analytic_file_raw

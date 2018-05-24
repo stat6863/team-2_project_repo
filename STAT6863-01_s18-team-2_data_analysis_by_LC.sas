@@ -99,21 +99,11 @@ because they are missing data.
 proc sql;
     select 
         District
-        ,count(Item_Number) as Total
-    from 
-        (
-        select 
-            Item_Number
-            ,District 
-        from 
-            Police_Reports_2016
-        union
-        select 
-            Item_Number
-            ,District 
-        from 
-            Police_Reports_2017
-        )
+        ,count(NOPD_Item) as Total
+    from
+		nopd_analytic_file
+	where
+		not(missing(District))
     group by District
     order by Total desc
     ;
