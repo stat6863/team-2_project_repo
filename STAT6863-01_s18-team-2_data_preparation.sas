@@ -301,79 +301,6 @@ proc sort
     ;
 run;
 
-
-*convert variable values of NOPD_Item from character to numeric due to variables
-being defined as more than one type.;
-data Calls_for_Service_2017;
-    set Calls_for_Service_2017
-    ;
-    num1 = input(NOPD_Item, $10.)
-    ;
-    num2 = put(InitialTypeText, $20.)
-    ;
-    drop 
-        NOPD_Item
-        InitialTypeText
-    ;
-    rename 
-        num1 = NOPD_Item
-        num2 = InitialTypeText
-    ;
-run;
-
-data Calls_for_Service_2016;
-    set Calls_for_Service_2016
-    ;
-    num1 = input(NOPD_Item, $10.)
-    ;
-    num2 = put(InitialTypeText, $20.)
-    ;
-    drop 
-        NOPD_Item
-        InitialTypeText
-    ;
-    rename 
-        num1 = NOPD_Item
-        num2 = InitialTypeText
-    ;
-run;
-
-*convert variable values of Item_Number from character to numeric due to variables
-being defined as more than one type.;
-data Police_Reports_2017;
-    set Police_Reports_2017
-    ;
-    num1 = input(compress(Item_Number,"-"),$10.)
-    ;
-    num2 = put(Signal_Description, $43.)
-    ;
-    drop 
-        Item_Number
-        Signal_Description
-    ;
-    rename 
-    num1 = Item_Number
-    num2 = Signal_Description
-    ;
-run;
-
-data Police_Reports_2016;
-    set Police_Reports_2016
-    ;
-    num1 = input(compress(Item_Number,"-"),$10.)
-    ;
-    num2 = put(Signal_Description, $43.)
-    ;
-    drop 
-        Item_Number
-        Signal_Description
-    ;
-    rename 
-    num1 = Item_Number
-    num2 = Signal_Description
-    ;
-run;
-
 *inspect columns of interest in cleaned version of datasets;
     /*  
     title "Zip in Calls_for_Service_2017";
@@ -673,15 +600,15 @@ run;
 data Calls_for_Service_1617_v1;
     retain
         NOPD_Item
-    InitialTypeText
-    TimeDispatch
-    Zip
+        InitialTypeText
+        TimeDispatch
+        Zip
     ;
     keep
-    NOPD_Item
-    InitialTypeText
-    TimeDispatch
-    Zip
+        NOPD_Item
+        InitialTypeText
+        TimeDispatch
+        Zip
     ;
     merge
         Calls_for_Service_2017
@@ -704,17 +631,17 @@ run;
  uses less memory;
 proc sql;
     create table Calls_for_Service_1617_v2 as
-    select
-        coalesce(A.NOPD_Item,B.NOPD_Item) as NOPD_Item
-        ,coalesce(A.InitialTypeText,B.InitialTypeText) as InitialTypeText
-        ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
-        ,coalesce(A.Zip,B.Zip) as Zip
+        select
+            coalesce(A.NOPD_Item,B.NOPD_Item) as NOPD_Item
+            ,coalesce(A.InitialTypeText,B.InitialTypeText) as InitialTypeText
+            ,coalesce(A.TimeDispatch,B.TimeDispatch) as TimeDispatch
+            ,coalesce(A.Zip,B.Zip) as Zip
         
-    from
-        Calls_for_Service_2017 as A
-        full join
-        Calls_for_Service_2016 as B
-        on A.NOPD_Item = B.NOPD_Item
+        from
+            Calls_for_Service_2017 as A
+            full join
+            Calls_for_Service_2016 as B
+            on A.NOPD_Item = B.NOPD_Item
     order by
             NOPD_Item
     ;
@@ -782,9 +709,9 @@ proc sql;
             as Victim_Fatal_Status
             ,coalesce(A.Signal_Description,B.Signal_Description) 
             as Signal_Description
-		        ,coalesce(A.District,B.District) as District
-		        ,coalesce(A.Offender_Race,B.Offender_Race) as Offender_Race
-		        ,coalesce(A.Offender_Gender,B.Offender_Gender) as Offender_Gender
+            ,coalesce(A.District,B.District) as District
+            ,coalesce(A.Offender_Race,B.Offender_Race) as Offender_Race
+            ,coalesce(A.Offender_Gender,B.Offender_Gender) as Offender_Gender
         from
             Police_Reports_2017 as A
             full join
@@ -891,10 +818,10 @@ proc sql;
             ,coalesce(C.District,D.District) As District
             ,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) 
             As Victim_Fatal_Status
-		        ,coalesce(C.Signal_Description,D.Signal_Description) 
+            ,coalesce(C.Signal_Description,D.Signal_Description) 
             As Signal_Description
-		        ,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
-		        ,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
+            ,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
+            ,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
         from
             (
                 select
