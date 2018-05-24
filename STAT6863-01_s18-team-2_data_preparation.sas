@@ -738,11 +738,21 @@ run;
 data Police_Reports_1617_v1;
     retain
         Item_Number
-    Offender_Age
+        Offender_Age
+        Victim_Fatal_Status
+        Signal_Description
+        District
+        Offender_Race
+        Offender_Gender
     ;
     keep
-    Item_Number
-    Offender_Age
+        Item_Number
+        Offender_Age
+        Victim_Fatal_Status
+        Signal_Description
+        District
+        Offender_Race
+        Offender_Gender
     ;
     merge
         Police_Reports_2017
@@ -765,15 +775,22 @@ run;
  uses more memory;
 proc sql;
     create table Police_Reports_1617_v2 as
-    select
-        coalesce(A.Item_Number,B.Item_Number) as Item_Number
-        ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
-    from
-        Police_Reports_2017 as A
-        full join
-        Police_Reports_2016 as B
-        on A.Item_Number = B.Item_Number
-    order by
+        select
+            coalesce(A.Item_Number,B.Item_Number) as Item_Number
+            ,coalesce(A.Offender_Age,B.Offender_Age) as Offender_Age
+            ,coalesce(A.Victim_Fatal_Status,B.Victim_Fatal_Status) 
+            as Victim_Fatal_Status
+            ,coalesce(A.Signal_Description,B.Signal_Description) 
+            as Signal_Description
+		        ,coalesce(A.District,B.District) as District
+		        ,coalesce(A.Offender_Race,B.Offender_Race) as Offender_Race
+		        ,coalesce(A.Offender_Gender,B.Offender_Gender) as Offender_Gender
+        from
+            Police_Reports_2017 as A
+            full join
+            Police_Reports_2016 as B
+            on A.Item_Number = B.Item_Number
+        order by
             Item_Number
     ;
 quit;
@@ -872,6 +889,12 @@ proc sql;
             ,coalesce(A.Zip,B.Zip) As Zip
             ,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
             ,coalesce(C.District,D.District) As District
+            ,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) 
+            As Victim_Fatal_Status
+		        ,coalesce(C.Signal_Description,D.Signal_Description) 
+            As Signal_Description
+		        ,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
+		        ,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
         from
             (
                 select
@@ -900,6 +923,10 @@ proc sql;
                     AS NOPD_Item
                     ,District
                     ,Offender_Age
+                    ,Victim_Fatal_Status
+                    ,Signal_Description
+                    ,Offender_Race
+                    ,Offender_Gender
                 from
                     Police_reports_2016
             ) as C
@@ -911,6 +938,10 @@ proc sql;
                     AS NOPD_Item
                     ,District
                     ,Offender_Age
+                    ,Victim_Fatal_Status
+                    ,Signal_Description
+                    ,Offender_Race
+                    ,Offender_Gender
                 from
                     Police_reports_2017
             ) as D
