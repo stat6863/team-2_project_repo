@@ -930,7 +930,7 @@ proc sql;
             full join
             (
                 select
-                    input(compress(Item_Number,"-"),$10.)
+                    compress(Item_Number,"-")
                     AS NOPD_Item
                     ,District
                     ,Offender_Age
@@ -945,7 +945,7 @@ proc sql;
             full join
             (
                 select
-                    input(compress(Item_Number,"-"),$10.)
+                    compress(Item_Number,"-")
                     AS NOPD_Item
                     ,District
                     ,Offender_Age
