@@ -73,6 +73,7 @@ should be excluded.
 proc sql;
     select 
         mean(Offender_Age) as MeanOffenderAge
+		label "Mean Offender Age"
     from 
         nopd_analytic_file
     ;
