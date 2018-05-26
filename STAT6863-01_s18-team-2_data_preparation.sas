@@ -301,6 +301,79 @@ proc sort
     ;
 run;
 
+
+*convert variable values of NOPD_Item from character to numeric due to variables
+being defined as more than one type.;
+data Calls_for_Service_2017;
+    set Calls_for_Service_2017
+    ;
+    num1 = input(NOPD_Item, $10.)
+    ;
+    num2 = put(InitialTypeText, $20.)
+    ;
+    drop 
+        NOPD_Item
+        InitialTypeText
+    ;
+    rename 
+        num1 = NOPD_Item
+        num2 = InitialTypeText
+    ;
+run;
+
+data Calls_for_Service_2016;
+    set Calls_for_Service_2016
+    ;
+    num1 = input(NOPD_Item, $10.)
+    ;
+    num2 = put(InitialTypeText, $20.)
+    ;
+    drop 
+        NOPD_Item
+        InitialTypeText
+    ;
+    rename 
+        num1 = NOPD_Item
+        num2 = InitialTypeText
+    ;
+run;
+
+*convert variable values of Item_Number from character to numeric due to variables
+being defined as more than one type.;
+data Police_Reports_2017;
+    set Police_Reports_2017
+    ;
+    num1 = input(compress(Item_Number,"-"),$10.)
+    ;
+    num2 = put(Signal_Description, $43.)
+    ;
+    drop 
+        Item_Number
+        Signal_Description
+    ;
+    rename 
+    num1 = Item_Number
+    num2 = Signal_Description
+    ;
+run;
+
+data Police_Reports_2016;
+    set Police_Reports_2016
+    ;
+    num1 = input(compress(Item_Number,"-"),$10.)
+    ;
+    num2 = put(Signal_Description, $43.)
+    ;
+    drop 
+        Item_Number
+        Signal_Description
+    ;
+    rename 
+    num1 = Item_Number
+    num2 = Signal_Description
+    ;
+run;
+
 *inspect columns of interest in cleaned version of datasets;
     /*  
     title "Zip in Calls_for_Service_2017";
