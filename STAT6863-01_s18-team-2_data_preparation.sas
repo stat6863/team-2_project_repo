@@ -301,6 +301,80 @@ proc sort
     ;
 run;
 
+/*
+*convert variable values of NOPD_Item from character to numeric due to variables
+being defined as more than one type.;
+data Calls_for_Service_2017;
+    set Calls_for_Service_2017
+    ;
+    num1 = input(NOPD_Item, $10.)
+    ;
+    num2 = put(InitialTypeText, $20.)
+    ;
+    drop 
+        NOPD_Item
+        InitialTypeText
+    ;
+    rename 
+        num1 = NOPD_Item
+        num2 = InitialTypeText
+    ;
+run;
+
+data Calls_for_Service_2016;
+    set Calls_for_Service_2016
+    ;
+    num1 = input(NOPD_Item, $10.)
+    ;
+    num2 = put(InitialTypeText, $20.)
+    ;
+    drop 
+        NOPD_Item
+        InitialTypeText
+    ;
+    rename 
+        num1 = NOPD_Item
+        num2 = InitialTypeText
+    ;
+run;
+
+*convert variable values of Item_Number from character to numeric due to variables
+being defined as more than one type.;
+data Police_Reports_2017;
+    set Police_Reports_2017
+    ;
+    num1 = input(compress(Item_Number,"-"),$10.)
+    ;
+    num2 = put(Signal_Description, $43.)
+    ;
+    drop 
+        Item_Number
+        Signal_Description
+    ;
+    rename 
+    num1 = Item_Number
+    num2 = Signal_Description
+    ;
+run;
+
+data Police_Reports_2016;
+    set Police_Reports_2016
+    ;
+    num1 = input(compress(Item_Number,"-"),$10.)
+    ;
+    num2 = put(Signal_Description, $43.)
+    ;
+    drop 
+        Item_Number
+        Signal_Description
+    ;
+    rename 
+    num1 = Item_Number
+    num2 = Signal_Description
+    ;
+run;
+*/
+
 *inspect columns of interest in cleaned version of datasets;
     /*  
     title "Zip in Calls_for_Service_2017";
@@ -810,18 +884,28 @@ proc sql;
     create table nopd_analytic_file_raw as
         select
             coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
-            AS NOPD_Item
-            ,coalesce(A.InitialTypeText,B.InitialTypeText) As InitialTypeText
-            ,coalesce(A.TimeDispatch,B.TimeDispatch) As TimeDispatch
-            ,coalesce(A.Zip,B.Zip) As Zip
-            ,coalesce(C.Offender_Age,D.Offender_Age) As Offender_Age
-            ,coalesce(C.District,D.District) As District
+            AS NOPD_Item format $10.
+            label "NOPD Item"
+            ,coalesce(A.InitialTypeText,B.InitialTypeText) 
+	    As InitialTypeText format $20.
+            ,coalesce(A.TimeDispatch,B.TimeDispatch) 
+	    As TimeDispatch format datetime18.
+	    label "Time of dispatch"
+            ,coalesce(A.Zip,B.Zip) 
+	    As Zip
+            ,coalesce(C.Offender_Age,D.Offender_Age) 
+	    As Offender_Age
+	    label "Age of offender"
+            ,coalesce(C.District,D.District) 
+	    As District
             ,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) 
             As Victim_Fatal_Status
             ,coalesce(C.Signal_Description,D.Signal_Description) 
             As Signal_Description
-            ,coalesce(C.Offender_Race,D.Offender_Race) As Offender_Race
-            ,coalesce(C.Offender_Gender,D.Offender_Gender) As Offender_Gender
+            ,coalesce(C.Offender_Race,D.Offender_Race) 
+	    As Offender_Race
+            ,coalesce(C.Offender_Gender,D.Offender_Gender) 
+	    As Offender_Gender
         from
             (
                 select
@@ -846,7 +930,7 @@ proc sql;
             full join
             (
                 select
-                    Item_Number
+                    compress(Item_Number,"-")
                     AS NOPD_Item
                     ,District
                     ,Offender_Age
@@ -861,7 +945,7 @@ proc sql;
             full join
             (
                 select
-                    Item_Number
+                    compress(Item_Number,"-")
                     AS NOPD_Item
                     ,District
                     ,Offender_Age
