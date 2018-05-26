@@ -811,27 +811,27 @@ proc sql;
         select
             coalesce(A.NOPD_Item,B.NOPD_Item,C.NOPD_Item,D.NOPD_Item)
             AS NOPD_Item format $10.
-			label "NOPD Item"
+            label "NOPD Item"
             ,coalesce(A.InitialTypeText,B.InitialTypeText) 
-			As InitialTypeText format $20.
+	    As InitialTypeText format $20.
             ,coalesce(A.TimeDispatch,B.TimeDispatch) 
-			As TimeDispatch format datetime18.
-			label "Time of dispatch"
+	    As TimeDispatch format datetime18.
+	    label "Time of dispatch"
             ,coalesce(A.Zip,B.Zip) 
-			As Zip
+	    As Zip
             ,coalesce(C.Offender_Age,D.Offender_Age) 
-			As Offender_Age
-			label "Age of offender"
+	    As Offender_Age
+	    label "Age of offender"
             ,coalesce(C.District,D.District) 
-			As District
+	    As District
             ,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) 
             As Victim_Fatal_Status
             ,coalesce(C.Signal_Description,D.Signal_Description) 
             As Signal_Description
             ,coalesce(C.Offender_Race,D.Offender_Race) 
-			As Offender_Race
+	    As Offender_Race
             ,coalesce(C.Offender_Gender,D.Offender_Gender) 
-			As Offender_Gender
+	    As Offender_Gender
         from
             (
                 select
