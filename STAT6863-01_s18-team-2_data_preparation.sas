@@ -301,7 +301,7 @@ proc sort
     ;
 run;
 
-
+/*
 *convert variable values of NOPD_Item from character to numeric due to variables
 being defined as more than one type.;
 data Calls_for_Service_2017;
@@ -373,6 +373,7 @@ data Police_Reports_2016;
     num2 = Signal_Description
     ;
 run;
+*/
 
 *inspect columns of interest in cleaned version of datasets;
     /*  
