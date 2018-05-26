@@ -41,15 +41,16 @@ proc sql;
 			TimeDispatch is not null
     ;
 quit;
-data weekday;	
+data CallsForService1617Day;	
     set CallsForService1617Day;
     Weekday=datepart(TimeDispatch);
     format Weekday weekdate3.;
 run;
 proc freq  
     order=freq
-    data = weekday;
-    tables weekday / norow nocum out=counts;
+    data = CallsForService1617Day;
+    tables weekday / norow nocol chisq out=counts
+	;
 run;
 
 *******************************************************************************;
@@ -98,14 +99,20 @@ because they are missing data.
 ;
 
 proc sql;
-    select 
-        District
-        ,count(NOPD_Item) as Total
-    from
-		nopd_analytic_file
-	where
-		not(missing(District))
-    group by District
-    order by Total desc
+	create table DistrictCounts as
+	    select 
+	        District
+	        ,count(NOPD_Item) as Total
+			label "Total number of crimes"
+	    from
+			nopd_analytic_file
+		where
+			not(missing(District))
+	    group by District
+	    order by Total desc
     ;
+quit;
+proc gchart data=DistrictCounts;
+  vbar3d District / sumvar=Total discrete noframe raxis=axis1 width=8 patternid=midpoint;
+run;
 quit;
