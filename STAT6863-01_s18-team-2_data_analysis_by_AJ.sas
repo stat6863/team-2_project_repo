@@ -14,16 +14,33 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 ******************************************************************************;
 * Research Question Analysis Starting Point;
 ******************************************************************************;
+
+title1 justify=left
+'Question: How does the frequency of crime change over the course of a year?'
+;
+
+title2 justify=left
+'Rationale: This should help police officers prepare for times of the year 
+which have more crime.'
+;
+
+footnote1 justify=left
+"We observe that the frequency of police dispatches follows a slight parabolic 
+shape, increasing as the year goes on before peaking and falling down again. 
+This trend appears to hold for both 2016 and 2017 data."
+;
+
+footnote2 justify=left
+"Further investigation is needed as far as the possible reasons for this trend,  
+for such efforts will aid in the decision of when to hire more police officers."
+;
+
 *
-Question: How does the frequency of crime change over the course of a year?
 
-Rationale: This should help police officers prepare for times of the year which 
-have more crime.
+'Note: This compares the column "Time Dispatch" and "Initial Type Text" from 
+2016 and 2017 Calls for Service data sets.
 
-Note: This compares the column "Time Dispatch" and "Initial Type Text" from 2016 and 2017 
-Calls for Service data sets.
-
-Limitations: Values of "Type Text" and "Time Create" that are blank should be 
+Limitations: Values of "Type Text" and "Time Dispatch" that are blank should be 
 excluded from this analysis, since they are potentially missing data values.
 ;
 
@@ -33,24 +50,46 @@ data adams_nopd_analytic_file;
 	format dmonth mmddyy10.;
 run;
 
-proc freq data=adams_nopd_analytic_file noprint;
-	tables dmonth / out=crime_perday;
+proc freq data=adams_nopd_analytic_file;
+	tables dmonth / out=calls_perday;
 run;
 
-title "Frequency of Police Dispatches in New Orleans";
-proc gplot data=crime_perday;
-	plot count * dmonth / vaxis=500 to 1000 by 10;
+title "Daily Frequency of Police Dispatches in New Orleans";
+proc sgplot data=calls_perday;
+	series x = dmonth y = count;
+	yaxis values=(600 to 1200);
 run;
 
 ******************************************************************************;
 * Research Question Analysis Starting Point;
 ******************************************************************************;
+
+title1 justify=left
+'Question: Can we predict the outcome of a fatality in New Orleans?'
+;
+
+title2 justify=left
+'Rationale: This would help the police to identify which factors are significant 
+in predicting a crime that ends in a fatality for the victim in New Orleans.'
+;
+
+footnote1 justify=left
+'Using logistic regression analysis, we find that none of our four factors 
+(district, signal description, offender race, and offender gender) are predictive 
+of a crime ending in a fatality for the victim.'
+
+footnote2 justify=left
+'However, the factor "district" was composed of eight levels, and district 3 was 
+actually found to be statistically significant (p = .0448) at the alpha = .05 
+level.'
+; 
+
+footnote3 justify=left
+'Further investigation is required as far as why district 3 is predictive in 
+whether a crime ends in a fatality for the victim.'
+;
+
 *
-Question: Can we predict the outcome of a fatality in New Orleans?
-
-Rationale: This would help the police to identify which factors are significant 
-in predicting a fatality in New Orleans.
-
 Note: This compares the column "Victim Fatal Status" with the columns 
 "Signal Description," "District," "Offender Race," and "Offender Gender" from 
 the 2016 and 2017 Electronic Police Reports data set.
@@ -91,5 +130,5 @@ values.
 ;
 
 proc freq data=nopd_analytic_file;
-	tables charge_description * offender_race / chisq;
+	tables signal_description * offender_race / chisq;
 run;
