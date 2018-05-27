@@ -20,25 +20,19 @@ title1 justify=left
 ;
 
 title2 justify=left
-'Rationale: This would help identify which day of the week has higher crime 
-rates and allows police departments to better allocate resources when
-targeting crime prevention.'
+'Rationale: This would help identify which day of the week has higher crime rates and allows police departments to better allocate resources when targeting crime prevention.'
 ;
 
 footnote1 justify=left
-"Friday has the most amount of crimes happening. The crime count totals/weekday
-were statistically significant with Sunday being the day with the least amount
-of crimes."
+"Friday has the most amount of crimes happening. The crime count totals/weekday were statistically significant with Sunday being the day with the least amount of crimes."
 ;
 
 footnote2 justify=left
-"One reason why crime has the most frequency in Fridays is because Friday is 
-the start of the weekend and is the peak day of the week for night life."
+"One reason why crime has the most frequency in Fridays is because Friday is the start of the weekend and is the peak day of the week for night life."
 ;
 
 footnote2 justify=left
-"Likewise, Sundays is the start of the weekend and thus has the least
-amount of crime."
+"Likewise, Sundays is the start of the weekend and thus has the least amount of crime."
 ;
 
 *
