@@ -165,14 +165,14 @@ proc sql;
        see that Calls_for_Service_2017 contains no rows, so no mitigation is
        needed to ensure uniqueness */
     create table Calls_for_Service_2017_dups as
-    select
+        select
             NOPD_Item
-        ,count(*) as row_count_for_unique_id_values
+            ,count(*) as row_count_for_unique_id_values
         from 
-        Calls_for_Service_2017_raw
-    group by
-        NOPD_Item
-    having
+            Calls_for_Service_2017_raw
+        group by
+            NOPD_Item
+        having
             row_count_for_unique_id_values > 1
     ;
 quit;
@@ -203,17 +203,18 @@ proc sql;
        which we can mitigate as part of eliminating rows having duplicate unique 
        id component*/
     create table Calls_for_Service_2016_dups as
-    select
+        select
             NOPD_Item
-        ,count(*) as row_count_for_unique_id_values
+            ,count(*) as row_count_for_unique_id_values
         from 
-        Calls_for_Service_2016_raw
-    group by
-        NOPD_Item
-    having
-        row_count_for_unique_id_values > 1
+            Calls_for_Service_2016_raw
+        group by
+            NOPD_Item
+        having
+            row_count_for_unique_id_values > 1
     ;
 quit;
+
 *removes rows with missing and duplicate unique id components, after 
  executing this query, the new dataset Calls_for_Service_2016 will have no 
  duplicate/repeated unique id values, and all unique id values will correspond
@@ -238,17 +239,18 @@ proc sql;
        which we can mitigate as part of eliminating rows having duplicate unique 
        id component*/
     create table Police_Reports_2017_dups as
-    select
-    Item_Number
-    ,count(*) as row_count_for_unique_id_values
-    from 
-    Police_Reports_2017_raw
-    group by
-    Item_Number
-    having
-        row_count_for_unique_id_values > 1
+        select
+            Item_Number
+            ,count(*) as row_count_for_unique_id_values
+        from 
+            Police_Reports_2017_raw
+        group by
+            Item_Number
+        having
+            row_count_for_unique_id_values > 1
     ;
 quit;
+
 *removes rows with missing and duplicate unique id components, after 
  executing this query, the new dataset Police_Reports_2017 will have no 
  duplicate/repeated unique id values, and all unique id values will correspond
@@ -275,16 +277,17 @@ proc sql;
        id component*/
     create table Police_Reports_2016_dups as
         select
-        Item_Number
-        ,count(*) as row_count_for_unique_id_values
+            Item_Number
+            ,count(*) as row_count_for_unique_id_values
         from 
-        Police_Reports_2016_raw
-    group by
-        Item_Number
-    having
-        row_count_for_unique_id_values > 1
+            Police_Reports_2016_raw
+        group by
+            Item_Number
+        having
+            row_count_for_unique_id_values > 1
     ;
 quit;
+
 *removes rows with missing and duplicate unique id components, after 
  executing this query, the new dataset Police_Reports_2016 will have no 
  duplicate/repeated unique id values, and all unique id values will correspond
@@ -302,8 +305,8 @@ proc sort
 run;
 
 * build analytic dataset from raw datasets imported above, including only the
-columns and minimal data-cleaning/transformation needed to address each
-research questions/objectives in data-analysis files;
+  columns and minimal data-cleaning/transformation needed to address each
+  research questions/objectives in data-analysis files;
 proc sql;
     create table nopd_analytic_file_raw as
         select
@@ -311,25 +314,25 @@ proc sql;
             AS NOPD_Item format $10.
 	    label "NOPD Item"
             ,coalesce(A.InitialTypeText,B.InitialTypeText) 
-	    As InitialTypeText format $20.
+	    AS InitialTypeText format $20.
             ,coalesce(A.TimeDispatch,B.TimeDispatch) 
-	    As TimeDispatch format datetime18.
+	    AS TimeDispatch format datetime18.
 	    label "Time of dispatch"
             ,coalesce(A.Zip,B.Zip) 
-	    As Zip
+	    AS Zip
             ,coalesce(C.Offender_Age,D.Offender_Age) 
-	    As Offender_Age
+	    AS Offender_Age
 	    label "Age of offender"
             ,coalesce(C.District,D.District) 
-	    As District
+	    AS District
             ,coalesce(C.Victim_Fatal_Status,D.Victim_Fatal_Status) 
-            As Victim_Fatal_Status
+            AS Victim_Fatal_Status
             ,coalesce(C.Signal_Description,D.Signal_Description) 
-            As Signal_Description
+            AS Signal_Description
             ,coalesce(C.Offender_Race,D.Offender_Race) 
-	    As Offender_Race
+	    AS Offender_Race
             ,coalesce(C.Offender_Gender,D.Offender_Gender) 
-	    As Offender_Gender
+	    AS Offender_Gender
         from
             (
                 select
@@ -387,9 +390,8 @@ proc sql;
 quit;
 
 * check nopd_analytic_file_raw for rows whose unique id values are repeated,
-missing, or correspond to non crimes, where the column NOPD_Item is intended
-to be a primary key;
-
+  missing, or correspond to non-crimes, where the column NOPD_Item is intended
+  to be a primary key;
 data nopd_analytic_file_raw_bad_ids;
     set nopd_analytic_file_raw;
     by NOPD_Item;
