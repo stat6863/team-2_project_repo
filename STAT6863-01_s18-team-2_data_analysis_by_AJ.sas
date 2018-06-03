@@ -241,6 +241,12 @@ should be excluded from this analysis, since they are potentially missing data
 values.
 ;
 
+proc report data=nopd_analytic_file;
+	column signal_description offender_race;
+	define signal_description / group format=$signal.;
+	define offender_race / group;
+run;
+
 proc freq data=nopd_analytic_file;
 	where offender_race in ('ASIAN', 'BLACK', 'HISPANIC', 'WHITE');
 	tables signal_description * offender_race / chisq expected cellchi2;
