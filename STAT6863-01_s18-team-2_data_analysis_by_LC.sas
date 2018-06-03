@@ -44,6 +44,15 @@ Calls_for_Service_2017 to combine the column and groups by day of the week to
 Limitations: The weekday format converts the datetime value into a weekday 
 number making it difficult to read the data. Should use a format proc to 
 convert the numbers into names
+
+Methodology: Use proc sql to create a temporary file removing all null 
+data then use proc data to convert from datetime to weekday name. Then 
+use proc freq to aggregate counts by weekday name.
+
+Followup Steps: Combine the first two steps into one procedure. Use 
+regression to see if there is a relationship between the type of crime
+and the weekday name.
+
 ;
 
 proc sql;
@@ -56,7 +65,7 @@ proc sql;
 			TimeDispatch is not null
     ;
 quit;
-data CallsForService1617Day;	
+proc data CallsForService1617Day;	
     set CallsForService1617Day;
     Weekday=datepart(TimeDispatch);
     format Weekday weekdate3.;
@@ -68,23 +77,27 @@ proc freq
 	;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
 
-title1 justify=left
+title1 justify=center
 'What is the average offender age?'
 ;
 
-title2 justify=left
+title2 justify=center
 'Rationale: This should help determine what age that most offenders are committing crime and whether there is a way to decrease crime at that age.'
 ;
 
-footnote1 justify=left
+footnote1 justify=center
 "The mean age for offenders is 32.54."
 ;
 
-footnote2 justify=left
+footnote2 justify=center
 "This is lower than the average NOLA age. The average age in NOLA is 35.7. Most offenders are probably more likely to be younger."
 ;
 
@@ -96,16 +109,33 @@ the column "Offender_Age" from each year that has a unique Item Number.
 Limitations: Values of Item_Number from the datasets 
 Electronic_Police_Report_2016 and Electronic_Police_Report_2017 that are blank
 should be excluded. 
+
+Methodology: Create a table using proc sql which averages all of the ages
+in the offender age column then use proc report to display the results.
+
+Followup Steps: Use "by District" in the sql state to do an average age by 
+district.
+
 ;
 
 proc sql;
-    select 
-        mean(Offender_Age) as MeanOffenderAge
-		label "Mean Offender Age"
-    from 
-        nopd_analytic_file
-    ;
+	create table age_mean as
+	    select 
+	        mean(Offender_Age) as MeanOffenderAge
+			label "Mean Offender Age"
+	    from 
+	        nopd_analytic_file
+	    ;
 quit;
+proc report data=age_mean;
+	columns
+        MeanOffenderAge
+    ;
+run;
+
+* clear titles/footnotes;
+title;
+footnote;
 
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -154,7 +184,15 @@ unique Item_Number.
 
 Limitations: Rows with missing District data should be excluded since they are
 missing data. Rows with missing Signal Description values should be excluded 
-because they are missing data. 
+because they are missing data.
+
+Methodology: Use proc sql to aggregae the total number of instances by district
+and create a table with it called DistrictCounts. Then use proc sgplot to 
+visualize the results.
+
+Followup Steps: Use a map to display the results so that each district is
+visualize geographically with the results.
+
 ;
 
 proc sql;
@@ -176,3 +214,6 @@ proc sgplot data=DistrictCounts;
 run;
 quit;
 
+* clear titles/footnotes;
+title;
+footnote;
