@@ -32,7 +32,6 @@ footnote2 justify=left
 ;
 
 *
-
 'Note: This compares the column "Time Dispatch" and "Initial Type Text" from 
 2016 and 2017 Calls for Service data sets.
 
