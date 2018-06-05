@@ -79,6 +79,10 @@ proc report data = Call_Type (obs=5);
     ;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
+
 *******************************************************************************;
 * Research Question Analysis Starting Point;
 *******************************************************************************;
@@ -134,6 +138,10 @@ proc sql;
     order by
         Offender_Age_freq desc;
 quit;
+
+* clear titles/footnotes;
+title;
+footnote;
    
 *******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -227,3 +235,6 @@ proc sgplot data = nopd_analytic_file;
     ;
 run;
 
+* clear titles/footnotes;
+title;
+footnote;
