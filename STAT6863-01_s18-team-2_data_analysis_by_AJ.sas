@@ -55,15 +55,30 @@ data adams_nopd_analytic_file;
 	format dmonth mmddyy10.;
 run;
 
-proc freq data=adams_nopd_analytic_file noprint;
-	tables dmonth / out=calls_perday;
+proc report data=adams_nopd_analytic_file out=calls_perday;
+	column dmonth N;
+	define dmonth / group;
+	define N / "Counts";
 run;
 
+proc sort data=calls_perday;
+	by dmonth;
+run;
+
+*clear titles/footnotes;
+title;
+footnote;
+
+title1 "Counts of Daily Police Dispatches: '16 - '17";
 proc sgplot data=calls_perday;
-	series x = dmonth y = count;
+	series x = dmonth y = N;
 	xaxis label = "date";
 	yaxis values=(600 to 1200);
 run;	
+
+*clear titles/footnotes;
+title;
+footnote;
 
 ******************************************************************************;
 * Research Question Analysis Starting Point;
@@ -118,16 +133,20 @@ proc logistic data=nopd_analytic_file;
 	model &y = &pred1 &pred2;
 run; 
 
+*clear titles/footnotes;
+title;
+footnote;
+
 ******************************************************************************;
 * Research Question Analysis Starting Point;
 ******************************************************************************;
 
 title1 justify=left
-'Research question: Are certain crimes more prevalent by race?'
+'Research question: Are certain crimes more or less prevalent by race?'
 ;
 
 title2 justify=left
-'Rationale: This would help police know of any crimes that are committed more prevalently by race... OR it could indicate to the public that certain races are disproportionately charged more for certain crimes.'
+'Rationale: This would help police know of any crimes that are committed more or less prevalently by race... OR it could indicate to the public that certain races are disproportionately charged more or less for certain crimes.'
 ;
 
 footnote1 justify=left
@@ -135,7 +154,7 @@ footnote1 justify=left
 ;
 
 footnote2 justify=left
-'Notable cell contributors: whites were charged significantly less for property and violent crimes than expected. However, they were charged significantly more for white-collar and victimless crimes than expected. Hispanics were charged significantly more for violent crimes than expected.'
+'Notable cell contributors: whites were charged significantly less for property and violent crimes than expected. However, they were charged significantly more for white-collar and victimless crimes than expected. Hispanics were charged significantly less for property crimes than expected but more for violent crimes than expected.'
 ;
 
 footnote3 justify=left
@@ -161,15 +180,12 @@ should be excluded from this analysis, since they are potentially missing data
 values.
 ;
 
-/*proc report data=nopd_analytic_file;
-	column signal_description offender_race N;
-	define signal_description / group format=$signal.;
-	define offender_race / group;
-	define N / "Number of Crimes Charged";
-run;*/
-
 proc freq data=nopd_analytic_file;
 	where offender_race in ('ASIAN', 'BLACK', 'HISPANIC', 'WHITE');
 	tables signal_description * offender_race / chisq expected cellchi2;
 	format signal_description $signal.;
 run;
+
+*clear titles/footnotes;
+title;
+footnote;
