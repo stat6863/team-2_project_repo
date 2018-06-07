@@ -8,7 +8,7 @@ X "cd ""%substr(%sysget(SAS_EXECFILEPATH),1,%eval(%length(%sysget(SAS_EXECFILEPA
 
 
 * load external file that will generate final analytic file;
-%include '.\STAT6863-01_s18-team-2_data_preparation';
+%include '.\STAT6863-01_s18-team-2_data_preparation.sas';
 
 
 ******************************************************************************;
@@ -32,11 +32,21 @@ footnote2 justify=left
 ;
 
 *
-'Note: This compares the column "Time Dispatch" and "Initial Type Text" from 
+Methodology: Use a data step to create a new variable "dmonth" which contains 
+just the date of when the call of the dispatch came. Then use proc freq to 
+create an output data set that contains the counts of the calls for dispatch 
+per date. Finally, use proc sgplot to create a line chart with the date as the 
+x-axis and the call counts on the y-axis.
+
+Follow-up: The plot can be broken down even further when we consider the counts 
+of the calls by type of crime.
+
+Note: This compares the column "Time Dispatch" and "Initial Type Text" from 
 2016 and 2017 Calls for Service data sets.
 
-Limitations: Values of "Type Text" and "Time Dispatch" that are blank should be 
-excluded from this analysis, since they are potentially missing data values.
+Limitations: Values of "Initial Type Text" and "Time Dispatch" that are blank 
+should be excluded from this analysis, since they are potentially missing data 
+values.
 ;
 
 data adams_nopd_analytic_file;
@@ -45,13 +55,13 @@ data adams_nopd_analytic_file;
 	format dmonth mmddyy10.;
 run;
 
-proc freq data=adams_nopd_analytic_file;
+proc freq data=adams_nopd_analytic_file noprint;
 	tables dmonth / out=calls_perday;
 run;
 
-title "Daily Frequency of Police Dispatches in New Orleans";
 proc sgplot data=calls_perday;
 	series x = dmonth y = count;
+	xaxis label = "date";
 	yaxis values=(600 to 1200);
 run;	
 
@@ -68,140 +78,44 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-'Using logistic regression analysis, we find that predictors "signal description" (p = .0008) and "offender gender" (p = .0167) are significant predictions of a victim fatality. Variable "district" was signicant at the alpha = .1 level (p = .0716).'
+'Using logistic regression analysis, we find that the model is significant with p = 0.0006. Both predictors police district (p = .0328) and the gender of the offender (p = .0265) were significant at the .05 level for predicting victim fatality.'
 ;
 
 footnote2 justify=left
-'The variable "signal description" was collapsed from over 100 factor levels to 5 levels based off of type of crime (violent, property, white-collar, victimless, and miscellaneous). The researcher correctly categorized these crimes to the best of his abilities.'
-;
-
-footnote3 justify=left
-'Categorical levels "District 3" (p=.0131) and "District 5" (p=.0130) were found as statistically significant.'
+'In particular, police district 3 (p=.0260) and police district 5 (p=.0013) were found as statistically significant.'
 ; 
 
-footnote4 justify=left
-'Odds ratio estimates show that males have 3.5 times higher odds than females of being associated with a fatal victim. Both districts 3 and 5 have about roughly the same higher odds (OR = 10) of being associated with a fatal victim compared to district 8.'
-;
-
-footnote5 justify=left
-'Further investigation is required as far as why districts 3 and 5 are predictive in whether a crime ends in a fatality for the victim.'
+footnote3 justify=left
+'Further investigation is required as far as why police districts 3 and 5 are predictive in whether a crime ends in a fatality for the victim.'
 ;
 
 *
-Note: This compares the column "Victim Fatal Status" with the columns 
-"Signal Description," "District," "Offender Race," and "Offender Gender" from 
-the 2016 and 2017 Electronic Police Reports data set. Diagnostic tests were 
-not run on the logistic regression model.
+Methodology: Our factors and response variable are set as macro variables for 
+easy model substitution and to aid readability. We use proc logistic along with 
+the format for the "signal description" variable to model "victim fatal status."
 
-Limitations: Values of "Victim Fatal Status," "Signal Description," 
-"District," "Offender Race," and "Offender Gender" that are blank should be 
-excluded from this analysis, since they are potentially missing data values.
+Follow-up: Double-check analysis to account for the case when a particular 
+offender is committing multiple crimes (as we assume that each of these crimes 
+are independent).
+
+Note: This compares the column "Victim Fatal Status" with the columns 
+"District" and "Offender Gender" from the 2016 and 2017 Electronic Police 
+Reports data set.
+
+Limitations: Values of "Victim Fatal Status," "District," and "Offender Gender" 
+that are blank should be excluded from this analysis, since they are 
+potentially missing data values.
 ;
 
-*Note that the below logistic regression model only includes class variables.;
 %let y = victim_fatal_status;
 %let pred1 = district;
 %let ref1 = 8;
-%let pred2 = signal_description;
-%let ref2 = Miscellaneous;
-%let pred3 = offender_race;
-%let ref3 = UNKNOWN;
-%let pred4 = offender_gender;
-%let ref4 = FEMALE;
-
-*group factor levels together for variable "signal description";
-proc format;
-	value $signal 'AGGRAVATED ASSAULT', 'AGGRAVATED ASSAULT (DOMESTIC)', 
-				'BOMB THREAT', 'AGGRAVATED BATTERY', 
-				'AGGRAVATED BATTERY (CUTTING)', 'AGGRAVATED KIDNAPPING', 
-				'ATTEMPTED SIMPLE KIDNAPPING', 'ATTEMPTED MURDER', 
-				'ATTEMPTED MURDER (CUTTING)', 'ATTEMPTED MURDER (DOMESTIC)', 
-				'ATTEMPTED MURDER (SHOOTING)', 'AUTO ACCIDENT (FATALITY)', 
-				'DEATH', 'AGGRAVATED BATTERY (DOMESTIC)',
-				'AGGRAVATED BATTERY (SHOOTING)', 'AUTO ACCIDENT (INJURY)', 
-				'CRUELTY TO A JUVENILE', 'ATTEMPTED AGGRAVATED RAPE',
-				'CRUELTY TO ANIMALS', 'AGGRAVATED RAPE', 
-				'AGGRAVATED RAPE (MALE VICTIM)', 'AGGRAVATED RAPE UNFOUNDED', 
-				'ATTEMPTED SEXUAL BATTERY', 'ATTEMPTED SIMPLE RAPE',
-				'DISTURBANCE', 'DISTURBANCE (DOMESTIC)', 'DISTURBANCE (FIGHT)', 
-				'DISTURBANCE (MENTAL)', 'DISTURBANCE (RIOT)', 'HOMICIDE', 
-				'HOMICIDE (CUTTING)', 'HOMICIDE (DOMESTIC)', 
-				'HOMICIDE (SHOOTING)', 'MISDEMEANOR SEXUAL BATTERY', 
-				'SIMPLE ASSAULT', 'NEGLIGENT INJURING',	'SEXUAL BATTERY', 
-				'SIMPLE ASSAULT	(DOMESTIC)', 'SIMPLE BATTERY', 
-				'SIMPLE BATTERY (DOMESTIC)', 'SIMPLE KIDNAPPING', 'SIMPLE RAPE', 
-				'SIMPLE RAPE (MALE VICTIM)', 'SIMPLE RAPE UNFOUNDED', 
-				'THREATS', 'THREATS (DOMESTIC)', 'RESISTING ARREST',
-				'ARMED ROBBERY', 'ARMED ROBBERY (GUN)', 'ARMED ROBBERY (KNIFE)',
-				'ATTEMPTED ARMED CARJACKING', 'ATTEMPTED ARMED ROBBERY', 
-				'ATTEMPTED ARMED ROBBERY (KNIFE)', 'ATTEMPTED SIMPLE ROBBERY', 
-				'ATTEMPTED SIMPLE ROBBERY (PURSESNATCHING)', 
-				'ATTEMPTED ARMED ROBBERY (GUN)'
-				= 'Violent'
-				'AGGRAVATED ARSON', 'SIMPLE ARSON', 'SIMPLE ARSON (DOMESTIC)', 
-				'ATTEMPTED AGGRAVATED ARSON', 'ATTEMPTED SIMPLE ARSON',
-				'ASSET SEIZURE', 'ATTEMPTED AUTO THEFT', 
-				'ATTEMPTED BICYCLE THEFT', 'ATTEMPTED PICKPOCKET',
-				'ATTEMPTED SHOPLIFITING', 'ATTEMPTED THEFT', 
-				'ATTEMPTED THEFT FROM EXTERIOR OF VEHICLE', 
-				'ATTEMPTED UNARMED CARJACKING', 'AUTO THEFT', 
-				'AUTO THEFT & RECOVERY', 'BICYCLE THEFT', 
-				'AGGRAVATED CRIMINAL DAMAGE', 'ARMED CARJACKING', 
-				'AGGRAVATED BURGLARY', 'ATTEMPTED AGGRAVATED BURGLARY', 
-				'ATTEMPTED SIMPLE BURGLARY', 
-				'ATTEMPTED SIMPLE BURGLARY (RESIDENCE)',
-				'ATTEMPTED SIMPLE BURGLARY (BUSINESS)', 
-				'ATTEMPTED SIMPLE BURGLARY (VEHICLE)', 
-				'DESECRATION OF GRAVES and sites', 'HIT AND RUN', 'PICKPOCKET', 
-				'POSSESSION OF STOLEN PROPERTY', 'PROPERTY SNATCHING', 
-				'SHOPLIFTING', 'SIMPLE BURGLARY', 'SIMPLE BURGLARY (BUSINESS)', 
-				'SIMPLE BURGLARY (DOMESTIC)', 'SIMPLE BURGLARY (RESIDENCE)', 
-				'SIMPLE BURGLARY (VEHICLE)', 'SIMPLE CRIMINAL DAMAGE', 
-				'SIMPLE CRIMINAL DAMAGE (DOMESTIC)', 'SIMPLE ROBBERY', 'THEFT', 
-				'THEFT FROM EXTERIOR OF VEHICLE', 'UNARMED CARJACKING', 
-				'BLIGHTED PROPERTY', 'LOST PROPERTY'
-				= 'Property'
-				'ATTEMPTED EMBEZZLEMENT', 'EMBEZZLEMENT', 'FORGERY',
-				'ATTEMPTED FORGERY', 'ATTEMPTED FRAUD', 
-				'ISSUING WORTHESS CHECKS', 'THEFT BY FRAUD'
-				= 'White-collar'
-				'ATTEMPTED SIMPLE ESCAPE', 'CARNAL KNOWLEDGE OF A JUVENILE', 
-				'CONTRIBUTING TO THE DELINQUENCY OF A MINOR', 
-				'CRIMINAL MISCHIEF', 'CRIMINAL MISCHIEF (DOMESTIC)', 
-				'CURFEW VIOLATION', 'DIRECTED TRAFFIC ENFORCEMENT', 
-				'DRIVING WHILE INTOXICATED', 'DRUG LAW VIOLATION', 
-				'ELECTRONIC MONITORING', 'FIRE', 'FUGITIVE ATTACHMENT',
-				'GAMBLING', 'HOMELESS', 'ILLEGAL CARRYING OF A GUN', 
-				'ILLEGAL CARRYING OF A KNIFE', 'ILLEGAL CARRYING OF A WEAPON', 
-				'IMPERSONATING A POLICE OFFICER', 'ILLEGAL USE OF WEAPONS',
-				'INDECENT BEHAVIOR WITH A JUVENILE', 
-				'INDECENT BEHAVIOR WITH A JUVENILE UNFOUNDED', 
-				'JUVENILE ATTACHMENT', 'MISSING ADULT', 
-				'MISSING/RUNAWAY JUVENILE',	'MUNICIPAL COURT ATTACHEMENT', 
-				'OBSCENITY', 'OUT OF PARISH VEHICLE RECOVERY', 'PANDERING', 
-				'PEEPING TOM', 'PROSTITUTION', 'PROTEST', 'PUBLIC DRUNK', 
-				'QUALITY OF LIFE', 'RECKLESS DRIVING', 
-				'SEX OFFENDER COMPLIANCE CHECK', 'SEXTING', 'SIMPLE ESCAPE', 
-				'SOLICITING FOR PROSTITUTION', 'SUICIDE', 'TRAFFIC ATTACHMENT', 
-				'TRAFFIC INCIDENT', 'TRESPASSING', 'TRUANT VIOLATION', 
-				'UNAUTHORIZED USE OF MOVABLES',	'UNDERAGE DRINKING', 
-				'VIDEO VOYEURISM', 'VIOLATION OF PROTECTIVE ORDERS', 
-				'WARRANT STOP AND RELEASE', 'ATTEMPTED SUICIDE'
-				= 'Victimless'
-				'ABANDONED VEHICLE', 'MISCELLANEOUS INCIDENT', 'EXPLOSION', 
-				'MEDICAL', 'AIRPLANE CRASH', 
-				'ATTEMPTED AGGRAVATED RAPE (MALE VICTIM)', 
-				'MEDICAL SEXUAL ASSAULT KIT PROCESSING', 
-				'UNATTENDED PACKAGE', 'UNCLASSIFIED DEATH',
-				'SUSPICIOUS PACKAGE', 'SUSPICIOUS PERSON'
-				= 'Miscellaneous';
-run;
+%let pred2 = offender_gender;
+%let ref2 = FEMALE;
 
 proc logistic data=nopd_analytic_file;
-	format &pred2 $signal.;
-	class &y &pred1 (ref="&ref1") &pred2 (ref="&ref2") &pred3 (ref="&ref3")
-		  &pred4 (ref="&ref4");
-	model &y = &pred1 &pred2 &pred3 &pred4;
+	class &y &pred1 (ref="&ref1") &pred2 (ref="&ref2");
+	model &y = &pred1 &pred2;
 run; 
 
 ******************************************************************************;
@@ -217,7 +131,7 @@ title2 justify=left
 ;
 
 footnote1 justify=left
-'After a chi-square analysis, we obtain a strong association (p < .001) between the two variables "signal description" and "offender race."'
+"After a chi-square analysis, we obtain a strong association (p < .001) between an offender's race and the type of crime committed."
 ;
 
 footnote2 justify=left
@@ -225,27 +139,34 @@ footnote2 justify=left
 ;
 
 footnote3 justify=left
-'The factor levels used for the variable "signal description" was the same as for the logistic regression analysis above.'
-;
-
-footnote4 justify=left
-'If an observation was marked "unknown" or "American Indian" for the "offender race" variable, it was removed from this analysis. The latter ("American Indian") was removed due to low cell counts.'
+"If an observation was marked 'unknown' or 'American Indian' for the 'offender race' variable, it was removed from this analysis. The latter ('American Indian') was removed due to low cell counts."
 ;
 
 *
-Note: This compares the column "Charge Description" and "Offender Race" 
+Methodology: We use proc report to check the counts of the categorical levels 
+when grouped by the formatted variable "signal description" for the purpose of 
+checking whether certain categorical levels should be excluded from the analysis. 
+Then we use proc freq on the two variables "signal description" and "offender 
+race" to conduct a chi-square analysis to test if they are associated.
+
+Follow-up: Double-check analysis to account for the case when a particular 
+offender is committing multiple crimes (as we assume that each of these crimes 
+are independent).
+
+Note: This compares the column "Signal Description" and "Offender Race" 
 from 2016 and 2017 Electronic Police Reports data sets.
 
-Limitations: Values of "Charge Description" and "Offender Race" that are blank 
+Limitations: Values of "Signal Description" and "Offender Race" that are blank 
 should be excluded from this analysis, since they are potentially missing data 
 values.
 ;
 
-proc report data=nopd_analytic_file;
-	column signal_description offender_race;
+/*proc report data=nopd_analytic_file;
+	column signal_description offender_race N;
 	define signal_description / group format=$signal.;
 	define offender_race / group;
-run;
+	define N / "Number of Crimes Charged";
+run;*/
 
 proc freq data=nopd_analytic_file;
 	where offender_race in ('ASIAN', 'BLACK', 'HISPANIC', 'WHITE');
